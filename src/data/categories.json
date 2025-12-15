@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Electronics",
+    "icon": "FaTv",
+    "description": "Gadgets and electronic devices for modern living."
+  },
+  {
+    "id": 2,
+    "name": "Home & Office",
+    "icon": "FaHome",
+    "description": "Furniture and accessories to enhance your living and working spaces."
+  },
+  {
+    "id": 3,
+    "name": "Kitchen & Dining",
+    "icon": "FaBlender",
+    "description": "Essentials for cooking, dining, and entertaining."
+  },
+  {
+    "id": 4,
+    "name": "Fashion",
+    "icon": "FaTshirt",
+    "description": "Trendy apparel and accessories for all occasions."
+  },
+  {
+    "id": 5,
+    "name": "Books",
+    "icon": "FaBook",
+    "description": "A wide selection of books for every interest."
+  }
+]

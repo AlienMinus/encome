@@ -1,0 +1,100 @@
+[
+  {
+    "id": 1,
+    "name": "Wireless Bluetooth Headphones",
+    "description": "High-quality wireless headphones with noise cancellation and long battery life. Perfect for music lovers and travelers.",
+    "price": 79.99,
+    "category": "Electronics",
+    "images": [
+      "https://m.media-amazon.com/images/I/51rpbVmi9XL._SL1200_.jpg",
+      "https://m.media-amazon.com/images/I/61X3V2U6pXL._AC_UF894,1000_QL80_.jpg",
+      "https://m.media-amazon.com/images/I/616pI8bZJPL.jpg"
+    ],
+    "rating": 4.5,
+    "stock": 50
+  },
+  {
+    "id": 2,
+    "name": "Smartwatch with Heart Rate Monitor",
+    "description": "Stay connected and track your fitness with this stylish smartwatch. Features include heart rate monitoring, step tracking, and notification alerts.",
+    "price": 129.99,
+    "category": "Electronics",
+    "images": [
+      "https://ecsmedia.pl/c/smartwatch-meski-militarny-rozmowy-wielofunkcyjny-b-iext127135580.jpg",
+      "https://i.ebayimg.com/images/g/sE0AAOSw9aZlZXs~/s-l1200.webp",
+      "https://ae01.alicdn.com/kf/S1b24599723a143528b3882d3f3f628c68/Smart-Watch-Men-Outdoor-Sports-Fitness-Tracker-Bluetooth-Call-Military-Smartwatch-For-Android-IOS-100-Modes.jpg"
+    ],
+    "rating": 4.2,
+    "stock": 30
+  },
+  {
+    "id": 3,
+    "name": "Portable Bluetooth Speaker",
+    "description": "Compact and powerful Bluetooth speaker with rich bass and clear sound. Ideal for outdoor adventures or home entertainment.",
+    "price": 49.99,
+    "category": "Electronics",
+    "images": [
+      "https://i5.walmartimages.com/asr/536ad9b4-cd11-460a-acc3-457bbf4b218d.ca8f4efe054cc9d1470ba872b656767a.jpeg",
+      "https://m.media-amazon.com/images/I/71gP2g-5k6L._AC_UF894,1000_QL80_.jpg",
+      "https://m.media-amazon.com/images/I/81x5PXt3s0L.jpg"
+    ],
+    "rating": 4.0,
+    "stock": 75
+  },
+  {
+    "id": 4,
+    "name": "Ergonomic Office Chair",
+    "description": "Experience ultimate comfort and support with this ergonomic office chair. Designed for long hours of work, promoting good posture.",
+    "price": 199.0,
+    "category": "Home & Office",
+    "images": [
+      "https://m.media-amazon.com/images/I/81tUnKmusIL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81dG8svfePL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71nI2H2WIxL._AC_SL1500_.jpg"
+    ],
+    "rating": 4.7,
+    "stock": 20
+  },
+  {
+    "id": 5,
+    "name": "Stainless Steel Water Bottle",
+    "description": "Keep your drinks hot or cold for hours with this durable stainless steel water bottle. Eco-friendly and perfect for daily use.",
+    "price": 19.99,
+    "category": "Kitchen & Dining",
+    "images": [
+      "https://m.media-amazon.com/images/I/718cpVx2zZL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61s0-1zH6JL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/61PTwz4aYtL._AC_SL1500_.jpg"
+    ],
+    "rating": 4.3,
+    "stock": 40
+  },
+  {
+    "id": 6,
+    "name": "Men's Classic T-Shirt",
+    "description": "A classic and comfortable t-shirt for everyday wear.",
+    "price": 25.99,
+    "category": "Fashion",
+    "images": [
+      "https://m.media-amazon.com/images/I/61XhJGgEp0L._SL1100_.jpg",
+      "https://www.gap.com/webcontent/0054/182/012/cn54182012.jpg",
+      "https://www. ralphlauren.com/dw/image/v2/BFDH_PRD/on/demandware.static/-/Sites-ralphlauren_us_master_catalog/default/dw1ea2b957/prod/dw/layered/1001550_f.jpg?sw=386&sh=514&sharp=1"
+    ],
+    "rating": 4.6,
+    "stock": 100
+  },
+  {
+    "id": 7,
+    "name": "The Great Gatsby",
+    "description": "A classic novel by F. Scott Fitzgerald.",
+    "price": 12.99,
+    "category": "Books",
+    "images": [
+      "https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg",
+      "https://m.media-amazon.com/images/I/81Qu6h6gHXL._AC_UF1000,1000_QL80_.jpg",
+      "https://m.media-amazon.com/images/I/71FTb9X6wsL._AC_UF1000,1000_QL80_.jpg"
+    ],
+    "rating": 4.8,
+    "stock": 80
+  }
+]
