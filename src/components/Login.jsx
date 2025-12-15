@@ -19,7 +19,7 @@ export default function Login() {
     // Handle login logic here (e.g., send data to an API)
     console.log('Login Data:', formData);
 
-    fetch('http://localhost:5000/api/login', {
+    fetch('https://encome.onrender.com/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
