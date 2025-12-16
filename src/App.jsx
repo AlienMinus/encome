@@ -12,6 +12,7 @@ import OrderReceipt from "./pages/OrderReceipt.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import { useAuth } from "./context/AuthContext";
+import Profile from "./pages/Profile.jsx";
 
 import Registration from "./components/Registration.jsx";
 import Login from "./components/Login.jsx";
@@ -24,43 +25,22 @@ function App() {
     <Router>
       <Registration />
       <Login />
-      {isLoggedIn ? (
-        <>
-          <Navbar search={search} setSearch={setSearch} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route
-              path="/products"
-              element={<Products search={search} setSearch={setSearch} />}
-            />
-            <Route path="/products/:id" element={<ProductDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/order-receipt" element={<OrderReceipt />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </>
-      ) : (
-        <>
-          <Navbar search={search} setSearch={setSearch} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route
-              path="/products"
-              element={<Products search={search} setSearch={setSearch} />}
-            />
-            <Route path="/products/:id" element={<ProductDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/order-receipt" element={<OrderReceipt />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </>
-      )}
+      <Navbar search={search} setSearch={setSearch} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route
+          path="/products"
+          element={<Products search={search} setSearch={setSearch} />}
+        />
+        <Route path="/products/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/order-receipt" element={<OrderReceipt />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
     </Router>
   );
 }

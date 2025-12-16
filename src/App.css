@@ -98,13 +98,17 @@
 
 /* ================= SEARCH BUTTON ================= */
 .btn-outline-success {
-  color: #c2185b;
-  border-color: #c2185b;
+  background-color: #c2185b;
+  color: white;
+  border: 1px solid #fce4ec;
+  transition: all 0.3s ease;
 }
 
 .btn-outline-success:hover {
-  background-color: #c2185b;
-  color: white;
+  background-color: #fce4ec;
+  cursor: pointer;
+  color: #c2185b;
+  border: 1px solid #c2185b;
 }
 
 .container {
@@ -247,12 +251,12 @@
     margin-left: 10px;
     color: #c2185b !important; /* Ensure icons retain color on small screens */
   }
-  
+
   .search-form {
     margin-top: 0;
     display: flex;
     margin-right: 8rem;
-    width: 100%; 
+    width: 100%;
   }
 }
 
@@ -870,4 +874,80 @@
   color: white;
   cursor: pointer;
   border: none;
+}
+
+/* ================= PROFILE PAGE ================= */
+.profile-container {
+  margin-top: 5rem;
+}
+
+.profile-card {
+  border: 1px solid #f8bbd0;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-card .card-header {
+  background-color: #c2185b;
+  color: white;
+  font-weight: bold;
+  border-bottom: 2px solid #f8bbd0;
+}
+
+.profile-card .card-body {
+  padding: 2rem;
+  color: #c2185b;
+}
+
+.address-card {
+  border: 1px solid #f8bbd0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.address-card .card-body {
+  padding: 1rem;
+}
+
+.profile-card input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #f8bbd0;
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+}
+
+.profile-card input[type="text"]:focus {
+  border-color: #c2185b;
+  outline: none;
+}
+
+.btn-outline-primary {
+  background-color: #fce4ec;
+  color: #c2185b;
+  border: 1px solid #c2185b;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #c2185b;
+  color: white;
+  border: 1px solid #fce4ec;
+  cursor: pointer;
+}
+
+.btn-outline-secondary {
+  background-color: #fce4ec;
+  color: #ad1457;
+  border: 1px solid #ad1457;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #ad1457;
+  color: white;
+  border: 1px solid #fce4ec;
+  cursor: pointer;
 }
