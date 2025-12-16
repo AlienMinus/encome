@@ -43,12 +43,23 @@ function App() {
           </Routes>
         </>
       ) : (
-        <div className="container mt-5">
+        <>
           <Navbar search={search} setSearch={setSearch} />
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route
+              path="/products"
+              element={<Products search={search} setSearch={setSearch} />}
+            />
+            <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-receipt" element={<OrderReceipt />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
-        </div>
+        </>
       )}
     </Router>
   );

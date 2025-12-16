@@ -18,7 +18,7 @@ export default function Home() {
   }, []);
   return (
     <>
-      <div id="container carouselExampleCaptions" className="carousel slide" data-bs-ride="carousel">
+      <div id="carouselExampleCaptions" className="container carousel slide" data-bs-ride="carousel">
         <div className="carousel-indicators">
           {carouselProducts.map((_, index) => (
             <button
@@ -36,7 +36,7 @@ export default function Home() {
           {carouselProducts.map((product, index) => (
             <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={product.id}>
               <img src={product.images[0]} className="d-block w-100 carousel-image" alt={product.name} />
-              <div className="carousel-caption d-none d-md-block">
+              <div className="carousel-caption  d-md-block">
                 <h5 className="card-title">{product.name}</h5>
                 <p>{product.description.slice(0, 100)}...</p>
                 <Link to={`/products/${product.id}`} className="btn btn-primary-custom">View Details</Link>

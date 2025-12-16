@@ -8,8 +8,9 @@
   width: 100%;
   height: 64px; /* fixed height for equal spacing */
   z-index: 1000;
-  display: flex;
+  display: flex !important;
   align-items: center; /* vertical centering */
+  flex-wrap: wrap; /* Allow items to wrap on smaller screens */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -36,6 +37,7 @@
 
 .nav-link:hover {
   color: #ad1457;
+  cursor: pointer;
 }
 
 .nav-link.active {
@@ -47,8 +49,7 @@
   display: flex;
   align-items: center;
   gap: 18px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 10px 10px;
 }
 
 /* Cart badge */
@@ -73,6 +74,7 @@
 .navbar-toggler {
   border: none;
   padding: auto;
+  cursor: pointer;
 }
 
 .navbar-toggler-icon {
@@ -82,11 +84,16 @@
 .navbar-collapse {
   padding: 10px 15px;
   background-color: #f5e2eb;
+  width: 45%;
+  top: 0; /* Default to top: 0 for larger screens */
+  position: fixed;
+  left: 20%;
+  min-width: 200px;
+  border-radius: 0 0 8px 8px;
 }
 
 .search-form {
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 5px;
 }
 
 /* ================= SEARCH BUTTON ================= */
@@ -197,6 +204,7 @@
 .btn-view-details:hover {
   background-color: #c2185b;
   color: white;
+  cursor: pointer;
   border: 1px solid #fce4ec;
 }
 
@@ -210,19 +218,41 @@
 .btn-add-to-cart:hover,
 .btn-checkout:hover {
   background-color: #fce4ec;
+  cursor: pointer;
   color: #c2185b;
   border: 1px solid #c2185b;
 }
 
 /* ================= RESPONSIVE STYLES ================= */
-@media (max-width: 992px) {
+@media (max-width: 990px) {
   .icon-container {
     margin-left: 0;
     margin-right: 0;
     gap: 10px;
+    position: absolute;
+    top: 0.3rem;
+    right: 0;
+    margin: 10px 10px;
   }
+
   .navbar-collapse {
+    padding-bottom: 15px;
     margin-top: 1rem;
+    top: 3rem; /* Apply top: 3rem for smaller screens */
+    width: 70%; /* Make collapse menu full width */
+    left: 0; /* Align to left */
+    border-radius: 0 0 8px 8px; /* Maintain rounded corners */
+  }
+  .icon-container .nav-link {
+    margin-left: 10px;
+    color: #c2185b !important; /* Ensure icons retain color on small screens */
+  }
+  
+  .search-form {
+    margin-top: 0;
+    display: flex;
+    margin-right: 8rem;
+    width: 100%; 
   }
 }
 
@@ -274,6 +304,10 @@
   }
   .cart-item-controls {
     flex-wrap: wrap;
+  }
+  .search-form {
+    margin-top: 2rem;
+    display: flex;
   }
 }
 
@@ -821,6 +855,7 @@
 .btn-register:hover {
   background-color: #fce4ec;
   color: #c2185b;
+  cursor: pointer;
   border: 1px solid #c2185b;
 }
 
@@ -833,6 +868,6 @@
 .btn-login:hover {
   background-color: #c2185b;
   color: white;
+  cursor: pointer;
   border: none;
 }
-

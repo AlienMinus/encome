@@ -1,6 +1,6 @@
 import favicon from "../assets/favicon.png";
-import { FaShoppingCart, FaUser, FaSearchengin } from "react-icons/fa";
 import "../App.css";
+import { FaShoppingCart, FaUser, FaSearchengin, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaClipboardList } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -55,29 +55,28 @@ export default function Navbar({ search, setSearch }) {
           </Link>
 
           <div className="d-flex align-items-center">
-            <div className="icon-container">
-              <a className="nav-link text-hover-effect" onClick={toggleSearch}>
-                <FaSearchengin size={20} />
-              </a>
-              {isSearchVisible && (
+            {isSearchVisible && (
                 <form
                   className="d-flex search-form"
                   role="search"
                   onSubmit={handleSearch}
                 >
                   <input
-                    className="form-control me-2"
+                    className="form-control"
                     type="search"
                     placeholder="Search"
                     aria-label="Search"
-                    value={search}
+                    value={search} 
                     onChange={(e) => setSearch(e.target.value)}
                   />
-                  <button className="btn btn-outline-success" type="submit">
-                    <FaSearchengin size={20} />
-                  </button>
                 </form>
               )}
+            <div className="icon-container">
+              
+              <a className="nav-link text-hover-effect" onClick={toggleSearch}>
+                <FaSearchengin size={20} />
+              </a>
+              
               <Link
                 to="/cart"
                 className="nav-link cart-icon-container text-hover-effect"
@@ -86,13 +85,45 @@ export default function Navbar({ search, setSearch }) {
                 <span className="badge bg-danger">{cartItems.length}</span>
               </Link>
               {isLoggedIn ? (
-                <a className="nav-link text-hover-effect" onClick={handleLogout}>
-                  <FaUser size={20} /> Logout
-                </a>
+                <div className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-hover-effect"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <FaUser size={20} />
+                  </a>
+                  <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li>
+                      <Link className="dropdown-item" to="/profile">
+                        <FaUser size={18} className="me-2" /> Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <Link className="dropdown-item" to="/order-history">
+                        <FaClipboardList size={18} className="me-2" /> Order History
+                      </Link>
+                    </li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li>
+                      <a className="dropdown-item" onClick={handleLogout}>
+                        <FaSignOutAlt size={18} className="me-2" /> Logout
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               ) : (
-                <a className="nav-link text-hover-effect" data-bs-toggle="modal" data-bs-target="#loginModal">
-                  <FaUser size={20} /> Login
-                </a>
+                <>
+                  <a className="nav-link text-hover-effect" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <FaSignInAlt size={20} className="me-1" /> Login
+                  </a>
+                  {/* <a className="nav-link text-hover-effect" data-bs-toggle="modal" data-bs-target="#registrationModal">
+                    <FaUserPlus size={20} className="me-1" /> Register
+                  </a> */}
+                </>
               )}
             </div>
           </div>
@@ -123,9 +154,9 @@ export default function Navbar({ search, setSearch }) {
                 </Link>
               </li>
               <li className="nav-item">
-                <a className="nav-link " href="/contact">
+                <Link className="nav-link " to="/contact">
                   Contact Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
