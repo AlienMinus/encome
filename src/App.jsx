@@ -9,6 +9,7 @@ import Categories from "./pages/Categories.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
 import Checkout from "./pages/Checkout.jsx"; // Import Checkout component
 import OrderReceipt from "./pages/OrderReceipt.jsx";
+import OrderHistory from "./pages/OrderHistory.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import { useAuth } from "./context/AuthContext";
@@ -40,6 +41,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/order-history" element={<OrderHistory />} />
       </Routes>
     </Router>
   );

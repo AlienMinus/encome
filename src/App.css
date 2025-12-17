@@ -377,7 +377,6 @@
 /* ================= CHECKOUT STYLES ================= */
 .checkout-container {
   max-width: 900px;
-  margin: 40px auto;
   padding: 30px;
   background-color: #fff;
   border-radius: 8px;
@@ -388,6 +387,7 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
+  margin-bottom: 2rem;
 }
 
 .checkout-container h1 {
@@ -896,6 +896,9 @@
 
 .profile-card .card-body {
   padding: 2rem;
+  color: #000;
+}
+.profile-card .card-body strong {
   color: #c2185b;
 }
 
@@ -951,3 +954,114 @@
   border: 1px solid #fce4ec;
   cursor: pointer;
 }
+
+.profile-picture-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.profile-initials-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #fce4ec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #c2185b;
+}
+
+.profile-initials {
+  font-size: 4rem;
+  color: #c2185b;
+  font-weight: bold;
+}
+
+/* ================= ORDER HISTORY ================= */
+.order-history-container {
+  max-width: 900px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.order-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.order-header h3 {
+  margin: 0;
+  color: #c2185b;
+}
+
+.order-header p {
+  margin: 0;
+  color: #777;
+  font-size: 0.9em;
+}
+
+.order-body .item-list-history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item-list-history li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed #e0e0e0;
+}
+
+.item-list-history li:last-child {
+  border-bottom: none;
+}
+
+.order-footer {
+  text-align: right;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #eee;
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .order-history-container {
+    padding: 10px;
+  }
+
+  .order-card {
+    padding: 15px;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+

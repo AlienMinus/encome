@@ -16,9 +16,15 @@ const Checkout = () => {
         country: '',
     });
 
+    const [paymentMethod, setPaymentMethod] = useState('Credit Card');
+
     const handleShippingChange = (e) => {
         const { name, value } = e.target;
         setShippingInfo(prevInfo => ({ ...prevInfo, [name]: value }));
+    };
+
+    const handlePaymentChange = (e) => {
+        setPaymentMethod(e.target.value);
     };
 
     const handlePlaceOrder = (e) => {
@@ -29,8 +35,26 @@ const Checkout = () => {
             return;
         }
 
+        const generateOrderId = () => {
+            const now = new Date();
+            const date = now.toISOString().slice(0, 10).replace(/-/g, '');
+            const time = now.toTimeString().slice(0, 8).replace(/:/g, '');
+
+            let orderNumberOfTheDay = 1;
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || {};
+
+            if (orderHistory[date]) {
+                orderNumberOfTheDay = orderHistory[date] + 1;
+            }
+
+            orderHistory[date] = orderNumberOfTheDay;
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+
+            return `${date}${time}${orderNumberOfTheDay}`;
+        };
+
         // Generate a mock order ID
-        const orderId = `GEMINI-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        const orderId = generateOrderId();
         const orderDate = new Date().toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
@@ -48,7 +72,7 @@ const Checkout = () => {
             })),
             total: getCartTotal(),
             shippingAddress: shippingInfo,
-            paymentMethod: 'Credit Card (**** 4242)', // Mock payment method
+            paymentMethod: paymentMethod,
         };
 
         // In a real app, you would send this to a backend API
@@ -158,9 +182,40 @@ const Checkout = () => {
                 </div>
 
                 <h2>Payment Information</h2>
-                <p className="payment-placeholder">
-                    (Payment gateway integration would go here. For this demo, payment is assumed successful.)
-                </p>
+                <div className="form-group">
+                    <div className="radio-group">
+                        <label>
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="Credit Card"
+                                checked={paymentMethod === 'Credit Card'}
+                                onChange={handlePaymentChange}
+                            />
+                            Credit Card
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="PayPal"
+                                checked={paymentMethod === 'PayPal'}
+                                onChange={handlePaymentChange}
+                            />
+                            PayPal
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                name="paymentMethod"
+                                value="Cash on Delivery"
+                                checked={paymentMethod === 'Cash on Delivery'}
+                                onChange={handlePaymentChange}
+                            />
+                            Cash on Delivery
+                        </label>
+                    </div>
+                </div>
 
                 <button type="submit" className="place-order-button">Place Order</button>
             </form>

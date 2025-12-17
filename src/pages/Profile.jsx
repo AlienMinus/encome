@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  FaUserCircle,
   FaEdit,
   FaKey,
   FaPlus,
@@ -17,8 +16,7 @@ const Profile = () => {
     profilePicture: "",
     addresses: [
       {
-        line1: "123 Main St",
-        line2: "Apt 4B",
+        line: "123 Main St",
         type: "Home",
       },
     ],
@@ -28,7 +26,7 @@ const Profile = () => {
   const [editedAddress, setEditedAddress] = useState(null);
 
   const handleAddAddress = () => {
-    const newAddress = { line1: "", line2: "", type: "" };
+    const newAddress = { line1: "", type: "" };
     setUser((prevUser) => ({
       ...prevUser,
       addresses: [...prevUser.addresses, newAddress],
@@ -70,11 +68,7 @@ const Profile = () => {
   };
 
   const handleCancelEdit = () => {
-    if (
-      editedAddress.line1 === "" &&
-      editedAddress.line2 === "" &&
-      editedAddress.type === ""
-    ) {
+    if (editedAddress.line === "" && editedAddress.type === "") {
       handleDeleteAddress(editingAddressIndex);
     }
     setEditingAddressIndex(null);
@@ -84,6 +78,16 @@ const Profile = () => {
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     setEditedAddress((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const getInitials = (name) => {
+    const nameParts = name.split(" ");
+    if (nameParts.length > 1) {
+      return (
+        nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)
+      ).toUpperCase();
+    }
+    return name.charAt(0).toUpperCase();
   };
 
   return (
@@ -96,7 +100,7 @@ const Profile = () => {
                 <h2>User Profile</h2>
               </div>
               <div className="card-body">
-                <div className="text-center mb-4">
+                <div className="profile-picture-container">
                   {user.profilePicture ? (
                     <img
                       src={user.profilePicture}
@@ -106,7 +110,11 @@ const Profile = () => {
                       height="150"
                     />
                   ) : (
-                    <FaUserCircle size={150} className="text-secondary" />
+                    <div className="profile-initials-circle">
+                      <span className="profile-initials">
+                        {getInitials(user.name)}
+                      </span>
+                    </div>
                   )}
                 </div>
                 <div className="mb-3">
@@ -126,21 +134,11 @@ const Profile = () => {
                       {editingAddressIndex === index ? (
                         <div>
                           <div className="mb-2">
-                            <strong>Address Line 1:</strong>
+                            <strong>Address Line:</strong>
                             <input
                               type="text"
-                              name="line1"
-                              value={editedAddress.line1}
-                              onChange={handleAddressChange}
-                              className="form-control"
-                            />
-                          </div>
-                          <div className="mb-2">
-                            <strong>Address Line 2:</strong>
-                            <input
-                              type="text"
-                              name="line2"
-                              value={editedAddress.line2}
+                              name="line"
+                              value={editedAddress.line}
                               onChange={handleAddressChange}
                               className="form-control"
                             />
@@ -173,11 +171,9 @@ const Profile = () => {
                       ) : (
                         <div>
                           <div className="mb-2">
-                            <strong>Address Line 1:</strong> {address.line1}
+                            <strong>Address Line:</strong> {address.line}
                           </div>
-                          <div className="mb-2">
-                            <strong>Address Line 2:</strong> {address.line2}
-                          </div>
+
                           <div className="mb-2">
                             <strong>Type:</strong> {address.type}
                           </div>
