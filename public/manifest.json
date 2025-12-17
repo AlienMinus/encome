@@ -1,0 +1,42 @@
+{
+  "short_name": "ShineX",
+  "name": "ShineX E-commerce",
+  "description": "ShineX E-commerce",
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "favicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff"
+}
