@@ -4,7 +4,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import dataRoutes from "./routes/data.js";
-import cartRoutes from "./routes/cart.js";
 
 dotenv.config();
 
@@ -17,7 +16,6 @@ app.use(express.json());
 // Routes
 app.use("/api", authRoutes);
 app.use("/api", dataRoutes);
-app.use("/api/cart", cartRoutes); // Add cart routes
 
 // MongoDB Connection
 mongoose
