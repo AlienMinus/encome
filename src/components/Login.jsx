@@ -71,6 +71,9 @@ export default function Login() {
               <p className="mt-3">
                 Don't have an account? <a href="#registrationModal" data-bs-toggle="modal" data-bs-dismiss="modal">Register here</a>.
               </p>
+              <p className="mt-2">
+                <a href="#passwordResetModal" data-bs-toggle="modal" data-bs-dismiss="modal">Forgot Password?</a>
+              </p>
             </form>
           </div>
           

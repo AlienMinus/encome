@@ -14,12 +14,17 @@ const userSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
-    password: {
-      type: String,
+    passwords: {
+      type: [String],
       required: true,
     },
   },
   { timestamps: true }
 );
+
+// Define a virtual property to get the current password
+userSchema.virtual('currentPassword').get(function() {
+  return this.passwords[this.passwords.length - 1];
+});
 
 export default mongoose.model("User", userSchema);

@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
     const newUser = new User({
       userId,
       email,
-      password: hashedPassword,
+      passwords: [hashedPassword],
     });
 
     await newUser.save();
@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
       return res.json({ success: false, message: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.currentPassword);
     if (!isMatch) {
       return res.json({ success: false, message: "Invalid credentials" });
     }
@@ -77,6 +77,50 @@ router.post("/login", async (req, res) => {
       },
     });
   } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+/* ================= PASSWORD RESET ================= */
+router.post("/reset-password", async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ success: false, message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const { lastPassword, newPassword } = req.body;
+
+    let isMatch = false;
+    for (const oldPassword of user.passwords) {
+      const result = await bcrypt.compare(lastPassword, oldPassword);
+      if (result) {
+        isMatch = true;
+        break;
+      }
+    }
+
+    if (!isMatch) {
+      return res.json({ success: false, message: "Last remembered password does not match" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.passwords.push(hashedPassword);
+    await user.save();
+
+    res.json({ success: true, message: "Password reset successful" });
+  } catch (error) {
+    if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ success: false, message: 'Invalid token' });
+    }
     console.error(error);
     res.status(500).json({ success: false, message: "Server error" });
   }

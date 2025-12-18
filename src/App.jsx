@@ -17,6 +17,7 @@ import Profile from "./pages/Profile.jsx";
 
 import Registration from "./components/Registration.jsx";
 import Login from "./components/Login.jsx";
+import PasswordReset from "./components/PasswordReset.jsx";
 
 function App() {
   const [search, setSearch] = useState("");
@@ -26,6 +27,7 @@ function App() {
     <Router>
       <Registration />
       <Login />
+      <PasswordReset />
       <Navbar search={search} setSearch={setSearch} />
       <Routes>
         <Route path="/" element={<Home />} />
