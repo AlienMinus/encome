@@ -63,7 +63,7 @@ router.post("/login", async (req, res) => {
         message: "Admin login successful",
         token,
         user: {
-          userId: 'admin',
+          userId: 'Minus',
           email: 'dasmanasranjan2005@gmail.com',
           role: 'admin',
         },
