@@ -5,7 +5,20 @@ const EditProfile = ({ user, onSave }) => {
   const [editedUser, setEditedUser] = useState(user);
 
   useEffect(() => {
-    setEditedUser(user);
+    if (user && user.addresses) {
+      setEditedUser({
+        ...user,
+        addresses: user.addresses.map(address => ({
+          street: address.street || '',
+          city: address.city || '',
+          state: address.state || '',
+          zip: address.zip || '',
+          country: address.country || '',
+        })),
+      });
+    } else {
+      setEditedUser(user);
+    }
   }, [user]);
 
   const handleChange = (e) => {
@@ -19,7 +32,10 @@ const EditProfile = ({ user, onSave }) => {
   const handleAddressChange = (e, index) => {
     const { name, value } = e.target;
     const updatedAddresses = [...editedUser.addresses];
-    updatedAddresses[index][name] = value;
+    updatedAddresses[index] = {
+      ...updatedAddresses[index],
+      [name]: value,
+    };
     setEditedUser((prevUser) => ({
       ...prevUser,
       addresses: updatedAddresses,
@@ -29,7 +45,7 @@ const EditProfile = ({ user, onSave }) => {
   const handleAddAddress = () => {
     setEditedUser((prevUser) => ({
       ...prevUser,
-      addresses: [...prevUser.addresses, { line: '', type: '' }],
+      addresses: [...prevUser.addresses, { street: '', city: '', state: '', zip: '', country: '' }],
     }));
   };
 
@@ -73,35 +89,76 @@ const EditProfile = ({ user, onSave }) => {
             <hr />
             <h5>Addresses</h5>
             {editedUser.addresses.map((address, index) => (
-              <div key={index} className="row mb-2 align-items-center">
-                <div className="col-12 col-sm-5 mb-2 mb-sm-0">
+              <div key={index} className="mb-4 p-3 border rounded">
+                <h6 className="mb-3">Address {index + 1}</h6>
+                <div className="form-group mb-3">
+                  <label htmlFor={`street-${index}`} className="form-label">Street Address</label>
                   <input
                     type="text"
-                    name="line"
-                    value={address.line}
+                    id={`street-${index}`}
+                    name="street"
+                    value={address.street}
                     onChange={(e) => handleAddressChange(e, index)}
                     className="form-control"
-                    placeholder="Address Line"
+                    placeholder="Street Address"
                   />
                 </div>
-                <div className="col-12 col-sm-4 mb-2 mb-sm-0">
+                <div className="form-group mb-3">
+                  <label htmlFor={`city-${index}`} className="form-label">City</label>
                   <input
                     type="text"
-                    name="type"
-                    value={address.type}
+                    id={`city-${index}`}
+                    name="city"
+                    value={address.city}
                     onChange={(e) => handleAddressChange(e, index)}
                     className="form-control"
-                    placeholder="Type (e.g., Home, Work)"
+                    placeholder="City"
                   />
                 </div>
-                <div className="col-12 col-sm-2 d-flex justify-content-end">
+                <div className="form-group mb-3">
+                  <label htmlFor={`state-${index}`} className="form-label">State/Province</label>
+                  <input
+                    type="text"
+                    id={`state-${index}`}
+                    name="state"
+                    value={address.state}
+                    onChange={(e) => handleAddressChange(e, index)}
+                    className="form-control"
+                    placeholder="State/Province"
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label htmlFor={`zip-${index}`} className="form-label">Zip/Postal Code</label>
+                  <input
+                    type="text"
+                    id={`zip-${index}`}
+                    name="zip"
+                    value={address.zip}
+                    onChange={(e) => handleAddressChange(e, index)}
+                    className="form-control"
+                    placeholder="Zip/Postal Code"
+                  />
+                </div>
+                <div className="form-group mb-3">
+                  <label htmlFor={`country-${index}`} className="form-label">Country</label>
+                  <input
+                    type="text"
+                    id={`country-${index}`}
+                    name="country"
+                    value={address.country}
+                    onChange={(e) => handleAddressChange(e, index)}
+                    className="form-control"
+                    placeholder="Country"
+                  />
+                </div>
+                <div className="d-flex justify-content-end">
                   <button className="btn btn-outline-danger btn-sm" onClick={() => handleDeleteAddress(index)}>
-                    <FaTrash />
+                    <FaTrash /> Remove Address
                   </button>
                 </div>
               </div>
             ))}
-            <button className="btn btn-outline-success btn-sm" onClick={handleAddAddress}>
+            <button className="btn btn-outline-success" onClick={handleAddAddress}>
               <FaPlus className="me-1" /> Add New Address
             </button>
           </div>

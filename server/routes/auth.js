@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
       message: "Login successful",
       token, // Include the token in the response
       user: {
-        userId: user._id, // Use MongoDB's _id as the identifier
+        userId: user._id.toString(), // Use MongoDB's _id as the identifier, converted to string
         email: user.email,
         role: user.role,
       },

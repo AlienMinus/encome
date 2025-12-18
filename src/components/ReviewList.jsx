@@ -9,7 +9,7 @@ const ReviewList = ({ productId, reviews }) => {
       <h4>Customer Reviews</h4>
       {productReviews.length > 0 ? (
         productReviews.map((review) => (
-          <div key={review.id} className="review-item">
+          <div key={review._id} className="review-item">
             <div className="review-author">{review.author}</div>
             <div className="review-rating">
               {[...Array(5)].map((_, i) => (

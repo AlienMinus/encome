@@ -23,15 +23,30 @@ const userSchema = new mongoose.Schema(
     },
     addresses: [
       {
-        line: {
+        street: {
           type: String,
           required: true,
           trim: true,
         },
-        type: {
+        city: {
           type: String,
-          enum: ['Home', 'Work', 'Other'],
-          default: 'Home',
+          required: true,
+          trim: true,
+        },
+        state: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        zip: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        country: {
+          type: String,
+          required: true,
+          trim: true,
         },
       },
     ],

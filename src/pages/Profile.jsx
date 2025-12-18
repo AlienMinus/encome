@@ -21,7 +21,7 @@ const Profile = () => {
         return;
       }
 
-      const apiUrl = `https://encome.onrender.com/api/user/${username}`;
+      const apiUrl = `https://encome.onrender.com/api/user/${encodeURIComponent(username)}`;
 
       try {
         const response = await fetch(apiUrl, {
@@ -59,7 +59,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch(`https://encome.onrender.com/api/user/${username}`, {
+      const response = await fetch(`https://encome.onrender.com/api/user/${encodeURIComponent(username)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -148,11 +148,19 @@ const Profile = () => {
                       <div className="card-body">
                         <div>
                           <div className="mb-2">
-                            <strong>Address Line:</strong> {address.line}
+                            <strong>Street:</strong> {address.street}
                           </div>
-
                           <div className="mb-2">
-                            <strong>Type:</strong> {address.type}
+                            <strong>City:</strong> {address.city}
+                          </div>
+                          <div className="mb-2">
+                            <strong>State/Province:</strong> {address.state}
+                          </div>
+                          <div className="mb-2">
+                            <strong>Zip/Postal Code:</strong> {address.zip}
+                          </div>
+                          <div className="mb-2">
+                            <strong>Country:</strong> {address.country}
                           </div>
                         </div>
                       </div>

@@ -22,34 +22,39 @@ export default function Registration() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();    fetch('https://encome.onrender.com/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Registration successful!');
-          localStorage.setItem('registrationFormData', JSON.stringify(formData));
-          window.location.href = '#loginModal';
-        } else {
-          alert('Registration failed: ' + data.message);
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('An error occurred during registration.');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Registration Data:', formData);
+
+    try {
+      const response = await fetch('https://encome.onrender.com/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
-    // Handle registration logic here (e.g., send data to an API)
-    console.log('Registration Data:', formData);
-    localStorage.setItem('registrationFormData', JSON.stringify(formData));
-    // You might want to close the modal or show a success message here
-    window.location.href = '#loginModal'; // Redirect to login modal after successful registration
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Registration successful!');
+        localStorage.removeItem('registrationFormData'); // Clear stored form data on successful registration
+        // Close the registration modal
+        const registrationModal = window.bootstrap.Modal.getInstance(document.getElementById('registrationModal'));
+        if (registrationModal) {
+          registrationModal.hide();
+        }
+        // Open the login modal
+        const loginModal = new window.bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show();
+      } else {
+        alert('Registration failed: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred during registration.');
+    }
   };
 
   return (
