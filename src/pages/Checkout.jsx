@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { loadStripe } from '@stripe/stripe-js';
+import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
