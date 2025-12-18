@@ -4,7 +4,7 @@ import path from 'path';
 
 const router = express.Router();
 
-const dataPath = path.resolve(process.cwd(), 'src/data');
+const dataPath = path.resolve(process.cwd(), './src/data');
 const productsFilePath = path.join(dataPath, 'products.json');
 const categoriesFilePath = path.join(dataPath, 'categories.json');
 
