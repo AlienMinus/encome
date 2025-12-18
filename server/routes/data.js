@@ -3,6 +3,7 @@ import Product from '../models/Product.js';
 import Category from '../models/Category.js';
 import Review from '../models/Review.js';
 import User from '../models/User.js'; // Import the User model
+import mongoose from 'mongoose'; // Import mongoose
 
 const router = express.Router();
 
@@ -174,27 +175,43 @@ router.post('/reviews', async (req, res) => {
 // User Profile API
 router.get('/user/:userId', async (req, res) => {
   try {
-    const user = await User.findById(req.params.userId).select('-passwords'); // Exclude passwords
+    let user;
+    if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      user = await User.findById(req.params.userId).select('-passwords'); // Exclude passwords
+    } else {
+      // For non-ObjectId user IDs (e.g., 'admin')
+      user = await User.findOne({ userId: req.params.userId }).select('-passwords'); // Exclude passwords
+    }
+    
     if (user) {
       res.json(user);
     } else {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
+    console.error("Error fetching user profile:", error); // Log the actual error for debugging
     res.status(500).json({ message: error.message });
   }
 });
 
 router.put('/user/:userId', async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true }).select('-passwords'); // Exclude passwords
+    let updatedUser;
+    if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
+      updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true }).select('-passwords'); // Exclude passwords
+    } else {
+      // For non-ObjectId user IDs (e.g., 'admin_user_id')
+      updatedUser = await User.findOneAndUpdate({ userId: req.params.userId }, req.body, { new: true }).select('-passwords'); // Exclude passwords
+    }
+
     if (updatedUser) {
       res.json(updatedUser);
     } else {
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error updating user profile:", error); // Log the actual error for debugging
+    res.status(500).json({ message: error.message });
   }
 });
 

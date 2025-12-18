@@ -65,6 +65,7 @@ router.post("/login", async (req, res) => {
         token,
         user: {
           userId: 'admin', // Consistent admin ID
+          name: 'Manas Ranjan Das',
           email: 'dasmanasranjan2005@gmail.com',
           role: 'admin',
         },
