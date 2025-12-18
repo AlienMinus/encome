@@ -174,7 +174,7 @@ router.post('/reviews', async (req, res) => {
 // User Profile API
 router.get('/user/:userId', async (req, res) => {
   try {
-    const user = await User.findOne({ userId: req.params.userId }).select('-passwords'); // Exclude passwords
+    const user = await User.findById(req.params.userId).select('-passwords'); // Exclude passwords
     if (user) {
       res.json(user);
     } else {
@@ -187,7 +187,7 @@ router.get('/user/:userId', async (req, res) => {
 
 router.put('/user/:userId', async (req, res) => {
   try {
-    const updatedUser = await User.findOneAndUpdate({ userId: req.params.userId }, req.body, { new: true }).select('-passwords'); // Exclude passwords
+    const updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true }).select('-passwords'); // Exclude passwords
     if (updatedUser) {
       res.json(updatedUser);
     } else {

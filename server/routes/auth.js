@@ -53,7 +53,7 @@ router.post("/login", async (req, res) => {
 
     if (email === 'dasmanasranjan2005@gmail.com' && password === '123456') {
       const token = jwt.sign(
-        { id: 'admin', userId: 'admin', role: 'admin' },
+        { id: 'Manas Ranjan Das', userId: 'admin', role: 'admin' },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -92,9 +92,9 @@ router.post("/login", async (req, res) => {
       message: "Login successful",
       token, // Include the token in the response
       user: {
-        userId: user.userId,
+        userId: user._id, // Use MongoDB's _id as the identifier
         email: user.email,
-        role: user.role, // Include role in the response
+        role: user.role,
       },
     });
   } catch (error) {
