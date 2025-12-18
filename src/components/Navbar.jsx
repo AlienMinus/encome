@@ -1,7 +1,7 @@
 import favicon from "../assets/favicon.png";
 import "../App.css";
 import { FaShoppingCart, FaUser, FaSearchengin, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaClipboardList } from "react-icons/fa";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { CartContext } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
@@ -11,6 +11,23 @@ export default function Navbar({ search, setSearch }) {
   const { cartItems } = useContext(CartContext);
   const { isLoggedIn, logout } = useAuth();
   const navigate = useNavigate();
+  const navbarCollapseRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navbarCollapseRef.current && !navbarCollapseRef.current.contains(event.target)) {
+        const bsCollapse = window.bootstrap.Collapse.getInstance(navbarCollapseRef.current);
+        if (bsCollapse && bsCollapse._isShown) {
+          bsCollapse.hide();
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const toggleSearch = () => {
     setIsSearchVisible(!isSearchVisible);
@@ -131,6 +148,7 @@ export default function Navbar({ search, setSearch }) {
           <div
             className="collapse navbar-collapse justify-content-end"
             id="navbarSupportedContent"
+            ref={navbarCollapseRef}
           >
             <ul className="navbar-nav mb-2 mb-lg-0">
               <li className="nav-item">
