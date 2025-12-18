@@ -65,6 +65,32 @@ router.delete('/products/:id', async (req, res) => {
   }
 });
 
+router.delete('/products/:id/images', async (req, res) => {
+  const { id } = req.params;
+  const { imageUrl } = req.body;
+
+  if (!imageUrl) {
+    return res.status(400).json({ message: 'Image URL is required' });
+  }
+
+  try {
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Pull the image URL from the images array
+    product.images.pull(imageUrl);
+
+    const updatedProduct = await product.save();
+
+    res.json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Categories API
 router.get('/categories', async (req, res) => {
     try {

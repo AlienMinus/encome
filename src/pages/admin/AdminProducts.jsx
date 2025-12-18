@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProductForm from '../../components/admin/ProductForm';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -87,8 +88,8 @@ const AdminProducts = () => {
               <td>${product.price}</td>
               <td>{product.stock}</td>
               <td>
-                <button onClick={() => handleEditProduct(product)} className="btn btn-sm btn-outline-primary">Edit</button>
-                <button onClick={() => handleDeleteProduct(product.id)} className="btn btn-sm btn-outline-danger ms-2">Delete</button>
+                <button onClick={() => handleEditProduct(product)} className="btn btn-sm btn-outline-primary"><FaEdit /></button>
+                <button onClick={() => handleDeleteProduct(product.id)} className="btn btn-sm btn-outline-danger ms-2"><FaTrash /></button>
               </td>
             </tr>
           ))}

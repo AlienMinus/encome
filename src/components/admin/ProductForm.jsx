@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaTrash, FaPlus, FaTimes, FaSave } from 'react-icons/fa';
 
 const ProductForm = ({ product, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -34,7 +35,27 @@ const ProductForm = ({ product, onSave, onCancel }) => {
     setFormData((prev) => ({ ...prev, images: [...prev.images, ''] }));
   };
 
-  const removeImageField = (index) => {
+  const removeImageField = async (index) => {
+    const imageToRemove = formData.images[index];
+
+    if (product && product.id && imageToRemove) {
+      try {
+        const response = await fetch(`/api/products/${product.id}/images`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageUrl: imageToRemove }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to delete image');
+        }
+      } catch (error) {
+        console.error('Error deleting image:', error);
+        return;
+      }
+    }
+
     const newImages = [...formData.images];
     newImages.splice(index, 1);
     setFormData((prev) => ({ ...prev, images: newImages }));
@@ -111,7 +132,7 @@ const ProductForm = ({ product, onSave, onCancel }) => {
               <div className="mb-3">
                 <label className="form-label">Images</label>
                 {formData.images.map((image, index) => (
-                  <div key={index} className="d-flex mb-2">
+                  <div key={`${index}-${image}`} className="d-flex mb-2">
                     <input
                       type="text"
                       className="form-control"
@@ -122,21 +143,22 @@ const ProductForm = ({ product, onSave, onCancel }) => {
                       type="button"
                       className="btn btn-outline-danger ms-2"
                       onClick={() => removeImageField(index)}
+                      title="Remove Image"
                     >
-                      Delete
+                      <FaTrash />
                     </button>
                   </div>
                 ))}
                 <button type="button" className="btn btn-outline-secondary" onClick={addImageField}>
-                  Add Image
+                  <FaPlus /> Add Image
                 </button>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={onCancel}>
-                  Cancel
+                  <FaTimes /> Cancel
                 </button>
                 <button type="submit" className="btn btn-primary-custom">
-                  Save
+                  <FaSave /> Save
                 </button>
               </div>
             </form>
