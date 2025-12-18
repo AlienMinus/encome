@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useCart } from '../context/CartContext';
 import ProductCard from "./ProductCard";
 
-const Recommended = () => {
-  const [products, setProducts] = useState([]);
+const Recommended = ({ currentProductId, currentProductCategory }) => {
+  const [allProducts, setAllProducts] = useState([]);
   const { addToCart } = useCart();
 
   useEffect(() => {
@@ -22,7 +22,6 @@ const Recommended = () => {
     fetchProducts();
   }, []);
 
-  // Filter out the current product and recommend products from the same category
   const recommendedProducts = allProducts.filter(
     (product) =>
       product._id !== currentProductId && product.category === currentProductCategory
