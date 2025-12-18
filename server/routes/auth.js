@@ -53,8 +53,16 @@ router.post("/login", async (req, res) => {
     }
 
     if (email === 'dasmanasranjan2005@gmail.com' && password === '123456') {
+      // Find the admin user in the database
+      const adminUser = await User.findOne({ email: 'dasmanasranjan2005@gmail.com' });
+
+      if (!adminUser) {
+        // This case should ideally not happen if the admin user is seeded correctly
+        return res.status(500).json({ success: false, message: "Admin user not found in database." });
+      }
+
       const token = jwt.sign(
-        { id: 'admin', role: 'admin' }, // Consistent admin ID
+        { id: adminUser._id.toString(), role: 'admin' }, // Use actual _id from database
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -64,10 +72,10 @@ router.post("/login", async (req, res) => {
         message: "Admin login successful",
         token,
         user: {
-          _id: 'admin', // Consistent admin ID
-          name: 'Manas Ranjan Das',
-          email: 'dasmanasranjan2005@gmail.com',
-          role: 'admin',
+          _id: adminUser._id.toString(), // Use actual _id from database
+          name: adminUser.name,
+          email: adminUser.email,
+          role: adminUser.role,
         },
       });
     }
