@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import {
   FaEdit,
   FaKey,
-  FaPlus,
-  FaTrash,
-  FaSave,
-  FaTimes,
 } from "react-icons/fa";
 import "../App.css";
+import EditProfile from "../components/EditProfile";
+
 const Profile = () => {
   const [user, setUser] = useState({
     name: "John Doe",
@@ -22,64 +20,6 @@ const Profile = () => {
     ],
   });
 
-  const [editingAddressIndex, setEditingAddressIndex] = useState(null);
-  const [editedAddress, setEditedAddress] = useState(null);
-
-  const handleAddAddress = () => {
-    const newAddress = { line1: "", type: "" };
-    setUser((prevUser) => ({
-      ...prevUser,
-      addresses: [...prevUser.addresses, newAddress],
-    }));
-    setEditingAddressIndex(user.addresses.length);
-    setEditedAddress(newAddress);
-  };
-
-  const handleEditAddress = (index) => {
-    setEditingAddressIndex(index);
-    setEditedAddress({ ...user.addresses[index] });
-  };
-
-  const handleDeleteAddress = (index) => {
-    setUser((prevUser) => ({
-      ...prevUser,
-      addresses: prevUser.addresses.filter((_, i) => i !== index),
-    }));
-  };
-
-  const handleSaveAddress = (index) => {
-    const isAddressTypeTaken = user.addresses.some(
-      (address, i) => i !== index && address.type === editedAddress.type
-    );
-
-    if (isAddressTypeTaken) {
-      alert("Address type already exists. Please choose a different type.");
-      return;
-    }
-
-    const updatedAddresses = [...user.addresses];
-    updatedAddresses[index] = editedAddress;
-    setUser((prevUser) => ({
-      ...prevUser,
-      addresses: updatedAddresses,
-    }));
-    setEditingAddressIndex(null);
-    setEditedAddress(null);
-  };
-
-  const handleCancelEdit = () => {
-    if (editedAddress.line === "" && editedAddress.type === "") {
-      handleDeleteAddress(editingAddressIndex);
-    }
-    setEditingAddressIndex(null);
-    setEditedAddress(null);
-  };
-
-  const handleAddressChange = (e) => {
-    const { name, value } = e.target;
-    setEditedAddress((prev) => ({ ...prev, [name]: value }));
-  };
-
   const getInitials = (name) => {
     const nameParts = name.split(" ");
     if (nameParts.length > 1) {
@@ -92,6 +32,7 @@ const Profile = () => {
 
   return (
     <>
+      <EditProfile user={user} onSave={setUser} />
       <div className="container mb-5">
         <div className="row justify-content-center">
           <div className="col-md-8">
@@ -131,45 +72,7 @@ const Profile = () => {
                 {user.addresses.map((address, index) => (
                   <div key={index} className="card mb-3">
                     <div className="card-body">
-                      {editingAddressIndex === index ? (
-                        <div>
-                          <div className="mb-2">
-                            <strong>Address Line:</strong>
-                            <input
-                              type="text"
-                              name="line"
-                              value={editedAddress.line}
-                              onChange={handleAddressChange}
-                              className="form-control"
-                            />
-                          </div>
-                          <div className="mb-2">
-                            <strong>Type:</strong>
-                            <input
-                              type="text"
-                              name="type"
-                              value={editedAddress.type}
-                              onChange={handleAddressChange}
-                              className="form-control"
-                            />
-                          </div>
-                          <div className="d-flex justify-content-end">
-                            <button
-                              className="btn btn-sm btn-outline-success me-2"
-                              onClick={() => handleSaveAddress(index)}
-                            >
-                              <FaSave className="me-1" /> Save
-                            </button>
-                            <button
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={handleCancelEdit}
-                            >
-                              <FaTimes className="me-1" /> Cancel
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
+                      <div>
                           <div className="mb-2">
                             <strong>Address Line:</strong> {address.line}
                           </div>
@@ -177,40 +80,24 @@ const Profile = () => {
                           <div className="mb-2">
                             <strong>Type:</strong> {address.type}
                           </div>
-                          <div className="d-flex justify-content-end">
-                            <button
-                              className="btn btn-sm btn-outline-primary me-2"
-                              onClick={() => handleEditAddress(index)}
-                            >
-                              <FaEdit className="me-1" /> Edit
-                            </button>
-                            <button
-                              className="btn btn-sm btn-outline-danger"
-                              onClick={() => handleDeleteAddress(index)}
-                            >
-                              <FaTrash className="me-1" /> Delete
-                            </button>
-                          </div>
                         </div>
-                      )}
                     </div>
                   </div>
                 ))}
-                <div className="d-flex justify-content-end mb-3">
-                  <button
-                    className="btn btn-outline-success"
-                    onClick={handleAddAddress}
-                    disabled={editingAddressIndex !== null}
-                  >
-                    <FaPlus className="me-1" /> Add New Address
-                  </button>
-                </div>
                 <hr />
                 <div className="d-flex justify-content-end">
-                  <button className="btn btn-outline-primary me-2">
+                  <button 
+                    className="btn btn-outline-primary me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editProfileModal"
+                  >
                     <FaEdit className="me-1" /> Edit Profile
                   </button>
-                  <button className="btn btn-outline-secondary">
+                  <button 
+                    className="btn btn-outline-secondary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#passwordResetModal"
+                  >
                     <FaKey className="me-1" /> Change Password
                   </button>
                 </div>
@@ -222,5 +109,6 @@ const Profile = () => {
     </>
   );
 };
+
 
 export default Profile;
