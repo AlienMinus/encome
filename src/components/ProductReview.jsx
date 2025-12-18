@@ -42,7 +42,7 @@ const ProductReview = ({ productId, onReviewSubmit }) => {
                   value={ratingValue}
                   onClick={() => setRating(ratingValue)}
                 />
-                <span className={ratingValue <= rating ? 'on' : 'off'}>&#9733;</span>
+                <span className={ratingValue <= rating ? 'star-filled' : 'star-empty'}>&#9733;</span>
               </label>
             );
           })}
@@ -53,7 +53,7 @@ const ProductReview = ({ productId, onReviewSubmit }) => {
           placeholder="Optional: Write a comment..."
           rows="4"
         />
-        <button type="submit">Submit Review</button>
+        <button type="submit" className='btn btn-primary-custom mt-2'>Submit Review</button>
       </form>
     </div>
   );

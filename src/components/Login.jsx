@@ -30,7 +30,7 @@ export default function Login() {
       .then(data => {
         if (data.success) {
           alert('Login successful!');
-          login(data.token); // Use the login function from AuthContext
+          login(data.token, data.user, data.user.role); // Use the login function from AuthContext
           // Close the modal
           const loginModal = window.bootstrap.Modal.getInstance(document.getElementById('loginModal'));
           if (loginModal) {

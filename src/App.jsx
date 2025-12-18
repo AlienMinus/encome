@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"; // Import Navigate
 import "./App.css";
 import Navbar from "./components/Navbar.jsx";
 import Products from "./pages/Products.jsx";
@@ -18,6 +18,20 @@ import Profile from "./pages/Profile.jsx";
 import Registration from "./components/Registration.jsx";
 import Login from "./components/Login.jsx";
 import PasswordReset from "./components/PasswordReset.jsx";
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx"; // Import AdminDashboard
+import AdminProducts from "./pages/admin/AdminProducts.jsx";
+import AdminOrders from "./pages/admin/AdminOrders.jsx";
+
+// AdminProtectedRoute component for admin access
+const AdminProtectedRoute = ({ children }) => {
+  const { isLoggedIn, userRole } = useAuth();
+
+  if (!isLoggedIn || userRole !== 'admin') {
+    // Redirect to home or an unauthorized page
+    return <Navigate to="/" replace />;
+  }
+  return children;
+};
 
 function App() {
   const [search, setSearch] = useState("");
@@ -44,6 +58,32 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/order-history" element={<OrderHistory />} />
+
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <AdminDashboard />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/products"
+          element={
+            <AdminProtectedRoute>
+              <AdminProducts />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            <AdminProtectedRoute>
+              <AdminOrders />
+            </AdminProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

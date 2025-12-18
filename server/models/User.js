@@ -18,6 +18,12 @@ const userSchema = new mongoose.Schema(
       type: [String],
       required: true,
     },
+    role: {
+      type: String,
+      required: true,
+      default: 'customer',
+      enum: ['customer', 'admin'] // Ensures only these two roles can be assigned
+    },
   },
   { timestamps: true }
 );

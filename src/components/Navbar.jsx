@@ -1,6 +1,5 @@
 import favicon from "../assets/favicon.png";
-import "../App.css";
-import { FaShoppingCart, FaUser, FaSearchengin, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaClipboardList } from "react-icons/fa";
+import { FaShoppingCart, FaUser, FaSearchengin, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaClipboardList, FaUserShield } from "react-icons/fa";
 import { useContext, useState, useEffect, useRef } from "react";
 import { CartContext } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Navbar({ search, setSearch }) {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const { cartItems } = useContext(CartContext);
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, userRole } = useAuth();
   const navigate = useNavigate();
   const navbarCollapseRef = useRef(null);
 
@@ -99,7 +98,7 @@ export default function Navbar({ search, setSearch }) {
                 className="nav-link cart-icon-container text-hover-effect"
               >
                 <FaShoppingCart size={20} />
-                <span className="badge bg-danger">{cartItems.length}</span>
+                <span className="badge bg-danger">{cartItems?.length || 0}</span>
               </Link>
               {isLoggedIn ? (
                 <div className="nav-item dropdown">
@@ -124,6 +123,13 @@ export default function Navbar({ search, setSearch }) {
                         <FaClipboardList size={18} className="me-2" /> Order History
                       </Link>
                     </li>
+                    {userRole === 'admin' && (
+                      <li>
+                        <Link className="dropdown-item" to="/admin">
+                          <FaUserShield size={18} className="me-2" /> Admin Panel
+                        </Link>
+                      </li>
+                    )}
                     <li><hr className="dropdown-divider" /></li>
                     <li>
                       <a className="dropdown-item" onClick={handleLogout}>

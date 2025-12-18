@@ -1117,18 +1117,11 @@
 }
 
 .product-review button {
-  background-color: #007bff;
-  color: white;
   padding: 0.75rem;
-  border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
   align-self: flex-start;
-}
-
-.product-review button:hover {
-  background-color: #0056b3;
 }
 
 /* ReviewList.css content */
