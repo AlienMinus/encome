@@ -5,6 +5,7 @@ import '../App.css';
 export default function Registration() {
   const [formData, setFormData] = useState({
     userId: '',
+    name: '', // Added name field
     email: '',
     password: '',
   });
@@ -22,7 +23,7 @@ export default function Registration() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();    fetch('/api/register', {
+    e.preventDefault();    fetch('https://encome.onrender.com/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,6 +70,18 @@ export default function Registration() {
                   id="registrationUserId"
                   name="userId"
                   value={formData.userId}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="registrationName" className="form-label">Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="registrationName"
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
                   required
                 />

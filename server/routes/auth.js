@@ -8,9 +8,9 @@ const router = express.Router();
 /* ================= REGISTER ================= */
 router.post("/register", async (req, res) => {
   try {
-    const { userId, email, password } = req.body;
+    const { userId, email, password, name } = req.body;
 
-    if (!userId || !email || !password) {
+    if (!userId || !email || !password || !name) {
       return res.json({ success: false, message: "All fields are required" });
     }
 
@@ -28,6 +28,7 @@ router.post("/register", async (req, res) => {
 
     const newUser = new User({
       userId,
+      name, // Include the name field
       email,
       passwords: [hashedPassword],
       role: 'customer', // Assign default role
@@ -53,7 +54,7 @@ router.post("/login", async (req, res) => {
 
     if (email === 'dasmanasranjan2005@gmail.com' && password === '123456') {
       const token = jwt.sign(
-        { id: 'Manas Ranjan Das', userId: 'admin', role: 'admin' },
+        { id: 'admin', userId: 'admin', role: 'admin' }, // Consistent admin ID
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -63,7 +64,7 @@ router.post("/login", async (req, res) => {
         message: "Admin login successful",
         token,
         user: {
-          userId: 'Manas Ranjan Das',
+          userId: 'admin_user_id', // Consistent admin ID
           email: 'dasmanasranjan2005@gmail.com',
           role: 'admin',
         },
