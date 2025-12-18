@@ -12,7 +12,10 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
   useEffect(() => {
     if (product) {
-      setFormData(product);
+      setFormData({
+        ...product,
+        images: product.images || [],
+      });
     }
   }, [product]);
 
@@ -29,6 +32,12 @@ const ProductForm = ({ product, onSave, onCancel }) => {
 
   const addImageField = () => {
     setFormData((prev) => ({ ...prev, images: [...prev.images, ''] }));
+  };
+
+  const removeImageField = (index) => {
+    const newImages = [...formData.images];
+    newImages.splice(index, 1);
+    setFormData((prev) => ({ ...prev, images: newImages }));
   };
 
   const handleSubmit = (e) => {
@@ -102,13 +111,21 @@ const ProductForm = ({ product, onSave, onCancel }) => {
               <div className="mb-3">
                 <label className="form-label">Images</label>
                 {formData.images.map((image, index) => (
-                  <input
-                    key={index}
-                    type="text"
-                    className="form-control mb-2"
-                    value={image}
-                    onChange={(e) => handleImageChange(e, index)}
-                  />
+                  <div key={index} className="d-flex mb-2">
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={image}
+                      onChange={(e) => handleImageChange(e, index)}
+                    />
+                    <button
+                      type="button"
+                      className="btn btn-outline-danger ms-2"
+                      onClick={() => removeImageField(index)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 ))}
                 <button type="button" className="btn btn-outline-secondary" onClick={addImageField}>
                   Add Image
