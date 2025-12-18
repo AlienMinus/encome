@@ -10,7 +10,7 @@ const ReviewList = ({ productId, reviews }) => {
       {productReviews.length > 0 ? (
         productReviews.map((review) => (
           <div key={review._id} className="review-item">
-            <div className="review-author">{review.user.name}</div>
+            <div className="review-author">{review.user ? review.user.name : 'Anonymous User'}</div>
             <div className="review-rating">
               {[...Array(5)].map((_, i) => (
                 <span key={i} className={i < review.rating ? 'star-filled' : 'star-empty'}>&#9733;</span>

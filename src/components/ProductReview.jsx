@@ -5,19 +5,24 @@ import '../App.css';
 const ProductReview = ({ productId, onReviewSubmit }) => {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
-  const { isLoggedIn, username } = useAuth(); // Get login status and username
+  const { isLoggedIn, currentUserId, displayUsername } = useAuth(); // Get login status and user ID and display name
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!isLoggedIn) {
+      alert('Please log in to submit a review.');
+      return;
+    }
+
     if (rating === 0) {
       alert('Please select a rating before submitting.');
       return;
     }
 
     const newReview = {
-      id: Date.now(), // Unique ID for the review
       productId,
-      author: isLoggedIn && username ? username : 'Anonymous User', // Use username if logged in, else Anonymous
+      user: currentUserId, // Use currentUserId directly as we've checked isLoggedIn
       rating,
       comment,
     };
@@ -26,6 +31,15 @@ const ProductReview = ({ productId, onReviewSubmit }) => {
     setRating(0); // Reset rating
     setComment(''); // Reset comment
   };
+
+  if (!isLoggedIn) {
+    return (
+      <div className="product-review">
+        <h3>Write a Review</h3>
+        <p>Please log in to leave a review.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="product-review">

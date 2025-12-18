@@ -7,6 +7,8 @@ import ProductReview from '../components/ProductReview';
 import ReviewList from '../components/ReviewList';
 import Rating from '../components/Rating';
 
+const API_BASE_URL = "https://encome.onrender.com/api";
+
 const ProductDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
@@ -23,7 +25,7 @@ const ProductDetails = () => {
     const fetchProductAndReviews = async () => {
       try {
         // Fetch product
-        const productResponse = await fetch(`/api/products/${id}`);
+        const productResponse = await fetch(`${API_BASE_URL}/products/${id}`);
         if (!productResponse.ok) {
           throw new Error("Product not found");
         }
@@ -32,7 +34,7 @@ const ProductDetails = () => {
         setProductRating(productData.rating);
 
         // Fetch reviews
-        const reviewsResponse = await fetch(`/api/reviews/${id}`);
+        const reviewsResponse = await fetch(`${API_BASE_URL}/reviews/${id}`);
         if (!reviewsResponse.ok) {
           throw new Error("Could not fetch reviews");
         }
@@ -50,7 +52,7 @@ const ProductDetails = () => {
 
   const handleReviewSubmit = async (newReview) => {
     try {
-      const response = await fetch("/api/reviews", {
+      const response = await fetch(`${API_BASE_URL}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -30,13 +30,17 @@ export default function Login() {
       .then(data => {
         if (data.success) {
           alert('Login successful!');
-          login(data.token, data.user, data.user.role); // Use the login function from AuthContext
-          // Close the modal
-          const loginModal = window.bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-          if (loginModal) {
-            setTimeout(() => {
-              loginModal.hide();
-            }, 50); // Small delay to allow state update and re-render
+          if (data.user && data.user._id) {
+            login(data.token, data.user, data.user.role); // Use the login function from AuthContext
+            // Close the modal
+            const loginModal = window.bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            if (loginModal) {
+              setTimeout(() => {
+                loginModal.hide();
+              }, 50); // Small delay to allow state update and re-render
+            }
+          } else {
+            alert('Login failed: User data is incomplete.');
           }
         } else {
           alert('Login failed: ' + data.message);

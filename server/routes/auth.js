@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
 
     if (email === 'dasmanasranjan2005@gmail.com' && password === '123456') {
       const token = jwt.sign(
-        { id: 'admin', userId: 'admin', role: 'admin' }, // Consistent admin ID
+        { id: 'admin', role: 'admin' }, // Consistent admin ID
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
       );
@@ -64,7 +64,7 @@ router.post("/login", async (req, res) => {
         message: "Admin login successful",
         token,
         user: {
-          userId: 'admin', // Consistent admin ID
+          _id: 'admin', // Consistent admin ID
           name: 'Manas Ranjan Das',
           email: 'dasmanasranjan2005@gmail.com',
           role: 'admin',
@@ -84,7 +84,7 @@ router.post("/login", async (req, res) => {
 
     // Generate JWT Token
     const token = jwt.sign(
-      { id: user._id, userId: user.userId, role: user.role }, // Include role in JWT payload
+      { id: user._id, role: user.role }, // Include role in JWT payload
       process.env.JWT_SECRET, // Use a strong secret from environment variables
       { expiresIn: "1h" } // Token expires in 1 hour
     );
@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
       message: "Login successful",
       token, // Include the token in the response
       user: {
-        userId: user._id.toString(), // Use MongoDB's _id as the identifier, converted to string
+        _id: user._id.toString(), // Use MongoDB's _id as the identifier, converted to string
         email: user.email,
         role: user.role,
       },
