@@ -12,18 +12,30 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      setLoading(true); // Ensure loading state is true on retry or initial fetch
+      setError(null); // Clear any previous errors
+
       if (!username || !authToken) {
-        setError("User not authenticated.");
+        setError("User not authenticated. Please log in.");
         setLoading(false);
         return;
       }
 
+      const apiUrl = `https://encome.onrender.com/api/user/${username}`;
+
       try {
-        const response = await fetch(`/api/user/${username}`, {
+        const response = await fetch(apiUrl, {
           headers: {
             Authorization: `Bearer ${authToken}`,
           },
         });
+
+        if (response.status === 404) {
+          setError("User profile not found. It might have been deleted or there's an issue with your account. Please try logging out and logging back in.");
+          // Optionally, force logout here if a 404 on profile is considered critical
+          // logout();
+          return;
+        }
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -47,7 +59,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch(`/api/user/${username}`, {
+      const response = await fetch(`https://encome.onrender.com/api/user/${username}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

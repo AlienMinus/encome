@@ -15,26 +15,23 @@ export const AuthProvider = ({ children }) => {
     const storedUsername = localStorage.getItem('username');
     const storedRole = localStorage.getItem('userRole'); // Retrieve role
 
-    if (token) {
-      setAuthToken(token);
-      setIsLoggedIn(true);
-      if (storedUsername) {
-        setUsername(storedUsername);
-      }
-      if (storedRole) {
-        setUserRole(storedRole); // Set role state
-      }
-    }
-  }, []);
+          if (token) {
+            setAuthToken(token);
+            setIsLoggedIn(true);
+            if (storedUsername && storedUsername !== '[object Object]') { // Add check for "[object Object]"
+              setUsername(storedUsername);
+            }
+            if (storedRole) {
+              setUserRole(storedRole); // Set role state
+            }
+          }  }, []);
 
   const login = (token, user, role) => { // Accept role parameter
-    localStorage.setItem('authToken', token);
-    localStorage.setItem('username', user);
-    localStorage.setItem('userRole', role); // Store role
+    localStorage.setItem('username', user.userId);
     setIsLoggedIn(true);
     setAuthToken(token);
-    setUsername(user);
-    setUserRole(role); // Set role state
+    setUsername(user.userId);
+    setUserRole(role);
   };
 
   const logout = () => {

@@ -59,7 +59,8 @@ const ProductDetails = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to submit review");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to submit review");
       }
 
       const savedReview = await response.json();

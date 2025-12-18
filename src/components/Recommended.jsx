@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import ProductCard from "./ProductCard";
 
@@ -52,7 +53,7 @@ const Recommended = ({ currentProductId, currentProductCategory }) => {
                     <small className=" discount-percentage">({discountPercentage}% off)</small>
                   </p>
                   <div className="d-flex justify-content-between mt-auto">
-                    <Link to={`/products/${product.id}`} className="btn btn-primary btn-view-details me-2">View Details</Link>
+                    <Link to={`/products/${product._id}`} className="btn btn-primary btn-view-details me-2">View Details</Link>
                     <button className="btn btn-secondary btn-add-to-cart ms-2" onClick={() => addToCart(product)}>Add to Cart</button>
                   </div>
                 </div>
