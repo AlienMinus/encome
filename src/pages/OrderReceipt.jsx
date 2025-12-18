@@ -95,7 +95,7 @@ const OrderReceipt = () => {
                 <h3>Items Purchased:</h3>
                 <ul className="item-list">
                     {orderDetails.items.map(item => (
-                        <li key={item.id} className="item-detail">
+                        <li key={item._id} className="item-detail">
                             <span>{item.name} (x{item.quantity})</span>
                             <span>${(item.quantity * item.price).toFixed(2)}</span>
                         </li>

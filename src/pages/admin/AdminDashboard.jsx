@@ -24,7 +24,7 @@ const AdminDashboard = () => {
             <div className="card-body">
               <h5 className="card-title">Manage Products</h5>
               <p className="card-text">Add, edit, and delete products.</p>
-              <Link to="/admin/products" className="btn btn-primary">Go to Products</Link>
+              <Link to="/admin/products" className="btn btn-primary-custom">Go to Products</Link>
             </div>
           </div>
         </div>
@@ -33,7 +33,7 @@ const AdminDashboard = () => {
             <div className="card-body">
               <h5 className="card-title">Manage Orders</h5>
               <p className="card-text">View and process customer orders.</p>
-              <Link to="/admin/orders" className="btn btn-primary">Go to Orders</Link>
+              <Link to="/admin/orders" className="btn btn-primary-custom">Go to Orders</Link>
             </div>
           </div>
         </div>

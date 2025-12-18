@@ -1,10 +1,9 @@
 import { useContext } from 'react';
-import { CartContext } from '../context/CartContext';
+import { useCart } from '../context/CartContext';
 import CartItem from '../components/CartItem';
-import { useNavigate } from 'react-router-dom';
 
-export default function Cart() {
-  const { cartItems, getCartTotal } = useContext(CartContext);
+const Cart = () => {
+  const { cartItems, getCartTotal } = useCart();
   const navigate = useNavigate();
 
   const totalPrice = getCartTotal();
@@ -37,3 +36,5 @@ export default function Cart() {
     </div>
   );
 }
+
+export default Cart;

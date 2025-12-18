@@ -8,6 +8,33 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trim: true,
     },
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    contact: {
+      type: String,
+      trim: true,
+    },
+    profilePicture: {
+      type: String,
+      trim: true,
+    },
+    addresses: [
+      {
+        line: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+        type: {
+          type: String,
+          enum: ['Home', 'Work', 'Other'],
+          default: 'Home',
+        },
+      },
+    ],
     email: {
       type: String,
       required: true,

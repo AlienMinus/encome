@@ -1,43 +1,92 @@
-import { useContext, useState } from "react";
-import { useParams } from "react-router-dom";
-import products from "../data/products.json";
-import staticReviews from "../data/reviews.json"; // Import static reviews
-import { CartContext } from "../context/CartContext";
-import "../App.css";
-import Recommended from "../components/Recommended";
-import ProductReview from "../components/ProductReview";
-import ReviewList from "../components/ReviewList"; // Import ReviewList
+import { useContext, useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useCart } from "../context/CartContext";
+import ProductReview from '../components/ProductReview';
+import ReviewList from '../components/ReviewList';
+import Rating from '../components/Rating';
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { addToCart } = useContext(CartContext);
-  const product = products.find((p) => p.id === parseInt(id));
-
-  // Initialize reviews state with static reviews for this product
-  const [reviews, setReviews] = useState(
-    staticReviews.filter((review) => review.productId === parseInt(id))
-  );
+  const { user } = useAuth();
+  const { addToCart } = useCart();
+  const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // State to manage the dynamic product rating
-  const [productRating, setProductRating] = useState(
-    product ? product.rating : 0
-  );
+  const [productRating, setProductRating] = useState(0);
 
-  const handleReviewSubmit = (newReview) => {
-    setReviews((prevReviews) => {
-      const updatedReviews = [newReview, ...prevReviews]; // Add new review to the top
+  useEffect(() => {
+    const fetchProductAndReviews = async () => {
+      try {
+        // Fetch product
+        const productResponse = await fetch(`/api/products/${id}`);
+        if (!productResponse.ok) {
+          throw new Error("Product not found");
+        }
+        const productData = await productResponse.json();
+        setProduct(productData);
+        setProductRating(productData.rating);
 
-      // Recalculate average rating
-      const totalRating = updatedReviews.reduce(
-        (sum, review) => sum + review.rating,
-        0
-      );
-      const newAverageRating = totalRating / updatedReviews.length;
-      setProductRating(newAverageRating); // Update the product rating state
+        // Fetch reviews
+        const reviewsResponse = await fetch(`/api/reviews/${id}`);
+        if (!reviewsResponse.ok) {
+          throw new Error("Could not fetch reviews");
+        }
+        const reviewsData = await reviewsResponse.json();
+        setReviews(reviewsData);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      return updatedReviews;
-    });
+    fetchProductAndReviews();
+  }, [id]);
+
+  const handleReviewSubmit = async (newReview) => {
+    try {
+      const response = await fetch("/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...newReview, product: id }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit review");
+      }
+
+      const savedReview = await response.json();
+      setReviews((prevReviews) => {
+        const updatedReviews = [savedReview, ...prevReviews];
+
+        // Recalculate average rating
+        const totalRating = updatedReviews.reduce(
+          (sum, review) => sum + review.rating,
+          0
+        );
+        const newAverageRating = totalRating / updatedReviews.length;
+        setProductRating(newAverageRating); // Update the product rating state
+
+        return updatedReviews;
+      });
+    } catch (err) {
+      console.error("Error submitting review:", err);
+    }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   if (!product) {
     return <div>Product not found</div>;
@@ -160,18 +209,18 @@ const ProductDetails = () => {
       <div className="row">
         <div className="col-md-12">
           <ProductReview
-            productId={product.id}
+            productId={product._id}
             onReviewSubmit={handleReviewSubmit}
           />
         </div>
       </div>
       <div className="row">
         <div className="col-md-12">
-          <ReviewList productId={product.id} reviews={reviews} />
+          <ReviewList productId={product._id} reviews={reviews} />
 
           <div className="row container mb-5">
             <Recommended
-              currentProductId={product.id}
+              currentProductId={product._id}
               currentProductCategory={product.category}
             />
           </div>

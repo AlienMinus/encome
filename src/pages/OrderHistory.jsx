@@ -26,7 +26,7 @@ const OrderHistory = () => {
                             <div className="order-body">
                                 <ul className="item-list-history">
                                     {order.items.map(item => (
-                                        <li key={item.id}>
+                                        <li key={item._id}>
                                             <span>{item.name} (x{item.quantity})</span>
                                             <span>${(item.quantity * item.price).toFixed(2)}</span>
                                         </li>

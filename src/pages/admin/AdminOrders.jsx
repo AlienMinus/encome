@@ -3,9 +3,9 @@ import React from 'react';
 const AdminOrders = () => {
   // Placeholder for orders data
   const orders = [
-    { id: 1, customer: 'John Doe', date: '2025-12-17', status: 'Shipped' },
-    { id: 2, customer: 'Jane Smith', date: '2025-12-16', status: 'Processing' },
-    { id: 3, customer: 'Bob Johnson', date: '2025-12-15', status: 'Delivered' },
+    { _id: 1, customer: 'John Doe', date: '2025-12-17', status: 'Shipped' },
+    { _id: 2, customer: 'Jane Smith', date: '2025-12-16', status: 'Processing' },
+    { _id: 3, customer: 'Bob Johnson', date: '2025-12-15', status: 'Delivered' },
   ];
 
   return (
@@ -24,8 +24,8 @@ const AdminOrders = () => {
         </thead>
         <tbody>
           {orders.map((order) => (
-            <tr key={order.id}>
-              <td>{order.id}</td>
+            <tr key={order._id}>
+              <td>{order._id}</td>
               <td>{order.customer}</td>
               <td>{order.date}</td>
               <td>{order.status}</td>

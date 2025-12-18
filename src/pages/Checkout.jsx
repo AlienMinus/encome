@@ -1,10 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { CartContext } from '../context/CartContext';
-import { useNavigate } from 'react-router-dom';
-import '../App.css';
+import { useCart } from '../context/CartContext';
+import { loadStripe } from '@stripe/stripe-js';
 
 const Checkout = () => {
-    const { cartItems, getCartTotal, clearCart } = useContext(CartContext);
+  const { cartItems, getCartTotal, clearCart } = useCart();
     const navigate = useNavigate();
 
     const [shippingInfo, setShippingInfo] = useState({
@@ -65,7 +64,7 @@ const Checkout = () => {
             orderId,
             date: orderDate,
             items: cartItems.map(item => ({
-                id: item.id,
+                _id: item._id,
                 name: item.name,
                 quantity: item.quantity,
                 price: item.price,
@@ -99,7 +98,7 @@ const Checkout = () => {
                     <>
                         <ul className="item-list-checkout">
                             {cartItems.map(item => (
-                                <li key={item.id}>
+                                <li key={item._id}>
                                     <span>{item.name} (x{item.quantity})</span>
                                     <span>${(item.quantity * item.price).toFixed(2)}</span>
                                 </li>

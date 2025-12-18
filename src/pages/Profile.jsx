@@ -1,26 +1,75 @@
-import React, { useState } from "react";
-import {
-  FaEdit,
-  FaKey,
-} from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaEdit, FaKey } from "react-icons/fa";
 import "../App.css";
 import EditProfile from "../components/EditProfile";
+import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 const Profile = () => {
-  const [user, setUser] = useState({
-    name: "John Doe",
-    email: "john.doe@example.com",
-    contact: "123-456-7890",
-    profilePicture: "",
-    addresses: [
-      {
-        line: "123 Main St",
-        type: "Home",
-      },
-    ],
-  });
+  const { username, authToken } = useAuth(); // Get username (which we're assuming is userId) and authToken
+  const [user, setUser] = useState(null); // Initialize user as null
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (!username || !authToken) {
+        setError("User not authenticated.");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/user/${username}`, {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setUser(data);
+      } catch (e) {
+        setError("Failed to fetch user profile: " + e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserProfile();
+  }, [username, authToken]); // Re-run when username or authToken changes
+
+  const handleProfileSave = async (updatedUser) => {
+    if (!username || !authToken) {
+      setError("User not authenticated.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/user/${username}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setUser(data); // Update local state with the new data from the server
+      alert("Profile updated successfully!");
+    } catch (e) {
+      setError("Failed to update user profile: " + e.message);
+      alert("Error updating profile. Please try again.");
+    }
+  };
 
   const getInitials = (name) => {
+    if (!name) return "";
     const nameParts = name.split(" ");
     if (nameParts.length > 1) {
       return (
@@ -30,9 +79,21 @@ const Profile = () => {
     return name.charAt(0).toUpperCase();
   };
 
+  if (loading) {
+    return <div className="container mt-5 text-center">Loading profile...</div>;
+  }
+
+  if (error) {
+    return <div className="container mt-5 text-center text-danger">{error}</div>;
+  }
+
+  if (!user) {
+    return <div className="container mt-5 text-center">No user data found.</div>;
+  }
+
   return (
     <>
-      <EditProfile user={user} onSave={setUser} />
+      <EditProfile user={user} onSave={handleProfileSave} /> {/* Pass handleProfileSave */}
       <div className="container mb-5">
         <div className="row justify-content-center">
           <div className="col-md-8">
@@ -69,10 +130,11 @@ const Profile = () => {
                 </div>
                 <hr />
                 <h5>Addresses</h5>
-                {user.addresses.map((address, index) => (
-                  <div key={index} className="card mb-3">
-                    <div className="card-body">
-                      <div>
+                {user.addresses && user.addresses.length > 0 ? (
+                  user.addresses.map((address, index) => (
+                    <div key={index} className="card mb-3">
+                      <div className="card-body">
+                        <div>
                           <div className="mb-2">
                             <strong>Address Line:</strong> {address.line}
                           </div>
@@ -81,9 +143,12 @@ const Profile = () => {
                             <strong>Type:</strong> {address.type}
                           </div>
                         </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p>No addresses found.</p>
+                )}
                 <hr />
                 <div className="d-flex justify-content-end">
                   <button 

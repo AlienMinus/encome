@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
-import products from "../data/products.json";
 
 export default function Products({ search, setSearch }) {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category");
   const [sortBy, setSortBy] = useState("");
+  const [products, setProducts] = useState([]); // State to hold products
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setProducts(data); // Set products from API
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const filteredProducts = products
     .filter((product) => {
@@ -53,7 +69,7 @@ export default function Products({ search, setSearch }) {
       <div className="row">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={product.id}>
+            <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={product._id}>
               <ProductCard product={product} />
             </div>
           ))

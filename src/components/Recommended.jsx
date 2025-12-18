@@ -1,15 +1,31 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import productsData from '../data/products.json';
-import { CartContext } from '../context/CartContext';
+import { useEffect, useState } from "react";
+import { useCart } from '../context/CartContext';
+import ProductCard from "./ProductCard";
 
-const Recommended = ({ currentProductId, currentProductCategory }) => {
-  const { addToCart } = useContext(CartContext);
+const Recommended = () => {
+  const [products, setProducts] = useState([]);
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setAllProducts(data);
+      } catch (error) {
+        console.error("Error fetching all products for recommendations:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   // Filter out the current product and recommend products from the same category
-  const recommendedProducts = productsData.filter(
+  const recommendedProducts = allProducts.filter(
     (product) =>
-      product.id !== currentProductId && product.category === currentProductCategory
+      product._id !== currentProductId && product.category === currentProductCategory
   ).slice(0, 4); // Limit to 4 recommended products
 
   if (recommendedProducts.length === 0) {
@@ -25,7 +41,7 @@ const Recommended = ({ currentProductId, currentProductCategory }) => {
           const discountPercentage = Math.round(((originalPrice - product.price) / originalPrice) * 100);
 
           return (
-            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product.id}>
+            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product._id}>
               <div className="card h-100 product-card">
                 <img src={product.images[0]} className="card-img-top" alt={product.name} />
                 <div className="card-body d-flex flex-column">

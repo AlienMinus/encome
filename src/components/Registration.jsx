@@ -22,7 +22,7 @@ export default function Registration() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();    fetch('https://encome.onrender.com/api/register', {
+    e.preventDefault();    fetch('/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

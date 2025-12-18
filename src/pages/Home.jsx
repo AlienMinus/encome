@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
-import products from "../data/products.json";
 import '../App.css'; // Import the CSS file
 import ProductCard from "../components/ProductCard";
-import categoriesData from "../data/categories.json";
 import CategoryCard from "../components/CategoryCard";
 import { useEffect, useState } from "react";
 
@@ -12,9 +10,35 @@ export default function Home() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    setCarouselProducts(products.sort(() => 0.5 - Math.random()).slice(0, 5));
-    setFeaturedProducts(products.sort(() => 0.5 - Math.random()).slice(0, 4));
-    setCategories(categoriesData.sort(() => 0.5 - Math.random()).slice(0, 4));
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const products = await response.json();
+        setCarouselProducts(products.sort(() => 0.5 - Math.random()).slice(0, 5));
+        setFeaturedProducts(products.sort(() => 0.5 - Math.random()).slice(0, 4));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('/api/categories');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const categoriesData = await response.json();
+        setCategories(categoriesData.sort(() => 0.5 - Math.random()).slice(0, 4));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchProducts();
+    fetchCategories();
   }, []);
   return (
     <>
@@ -34,12 +58,12 @@ export default function Home() {
         </div>
         <div className="carousel-inner">
           {carouselProducts.map((product, index) => (
-            <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={product.id}>
+            <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={product._id}>
               <img src={product.images[0]} className="d-block w-100 carousel-image" alt={product.name} />
               <div className="carousel-caption  d-md-block">
                 <h5 className="card-title">{product.name}</h5>
                 <p>{product.description.slice(0, 100)}...</p>
-                <Link to={`/products/${product.id}`} className="btn btn-primary-custom">View Details</Link>
+                <Link to={`/products/${product._id}`} className="btn btn-primary-custom">View Details</Link>
               </div>
             </div>
           ))}
@@ -58,7 +82,7 @@ export default function Home() {
         <h2 className="text-center mb-4">Featured Products</h2>
         <div className="row">
           {featuredProducts.map((product) => (
-            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product.id}>
+            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product._id}>
               <ProductCard product={product} />
             </div>
           ))}
@@ -69,7 +93,7 @@ export default function Home() {
         <h2 className="text-center mb-4">Shop by Category</h2>
         <div className="row">
           {categories.map((category) => (
-            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={category.id}>
+            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={category._id}>
               <CategoryCard item={category} />
             </div>
           ))}

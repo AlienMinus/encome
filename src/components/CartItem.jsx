@@ -1,8 +1,8 @@
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { useCart } from "../context/CartContext";
+import { FaTrash } from "react-icons/fa";
 
-export default function CartItem({ item }) {
-  const { removeFromCart, updateQuantity } = useContext(CartContext);
+const CartItem = ({ item }) => {
+  const { removeFromCart, updateQuantity } = useCart();
 
   const handleIncrease = () => {
     updateQuantity(item.id, item.quantity + 1);
@@ -61,3 +61,5 @@ export default function CartItem({ item }) {
     </div>
   );
 }
+
+export default CartItem;

@@ -2,6 +2,7 @@ import express from 'express';
 import Product from '../models/Product.js';
 import Category from '../models/Category.js';
 import Review from '../models/Review.js';
+import User from '../models/User.js'; // Import the User model
 
 const router = express.Router();
 
@@ -101,6 +102,55 @@ router.get('/categories', async (req, res) => {
     }
   });
 
+router.post('/categories', async (req, res) => {
+  const category = new Category(req.body);
+  try {
+    const newCategory = await category.save();
+    res.status(201).json(newCategory);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.get('/categories/:id', async (req, res) => {
+  try {
+    const category = await Category.findById(req.params.id);
+    if (category) {
+      res.json(category);
+    } else {
+      res.status(404).json({ message: 'Category not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put('/categories/:id', async (req, res) => {
+  try {
+    const updatedCategory = await Category.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (updatedCategory) {
+      res.json(updatedCategory);
+    } else {
+      res.status(404).json({ message: 'Category not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+router.delete('/categories/:id', async (req, res) => {
+  try {
+    const deletedCategory = await Category.findByIdAndDelete(req.params.id);
+    if (deletedCategory) {
+      res.json({ message: 'Category deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Category not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Reviews API
 router.get('/reviews/:productId', async (req, res) => {
     try {
@@ -121,5 +171,31 @@ router.post('/reviews', async (req, res) => {
     }
 });
 
+// User Profile API
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const user = await User.findOne({ userId: req.params.userId }).select('-passwords'); // Exclude passwords
+    if (user) {
+      res.json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put('/user/:userId', async (req, res) => {
+  try {
+    const updatedUser = await User.findOneAndUpdate({ userId: req.params.userId }, req.body, { new: true }).select('-passwords'); // Exclude passwords
+    if (updatedUser) {
+      res.json(updatedUser);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
 export default router;

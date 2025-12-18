@@ -24,7 +24,7 @@ export default function PasswordReset() {
     
     const token = getToken();
 
-    fetch('https://encome.onrender.com/api/reset-password', {
+    fetch('/api/reset-password', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

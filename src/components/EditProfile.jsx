@@ -64,7 +64,7 @@ const EditProfile = ({ user, onSave }) => {
             </div>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">Email</label>
-              <input type="email" className="form-control" id="email" name="email" value={editedUser.email} onChange={handleChange} />
+              <input type="email" className="form-control" id="email" name="email" value={editedUser.email} readOnly />
             </div>
             <div className="mb-3">
               <label htmlFor="contact" className="form-label">Contact No.</label>

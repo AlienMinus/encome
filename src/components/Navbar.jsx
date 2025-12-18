@@ -1,13 +1,13 @@
 import favicon from "../assets/favicon.png";
 import { FaShoppingCart, FaUser, FaSearchengin, FaSignInAlt, FaSignOutAlt, FaUserPlus, FaClipboardList, FaUserShield } from "react-icons/fa";
-import { useContext, useState, useEffect, useRef } from "react";
-import { CartContext } from "../context/CartContext";
+import { useState, useEffect, useRef } from "react";
+import { useCart } from "../context/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar({ search, setSearch }) {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const { cartItems } = useContext(CartContext);
+  const { cartItems } = useCart();
   const { isLoggedIn, logout, userRole } = useAuth();
   const navigate = useNavigate();
   const navbarCollapseRef = useRef(null);
