@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const auth = require('../middleware/auth'); // Assuming you have an auth middleware
-const Cart = require('../models/Cart');
-const Product = require('../models/Product');
+import express from 'express';
+import auth from '../middleware/auth.js'; // Assuming you have an auth middleware
+import Cart from '../models/Cart.js';
+import Product from '../models/Product.js';
 
-// @route   GET api/cart
+const router = express.Router();
+
 // @desc    Get user cart
 // @access  Private
 router.get('/', auth, async (req, res) => {
@@ -20,7 +20,7 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-// @route   POST api/cart/add
+// @route POST api/cart/add
 // @desc    Add item to cart or update quantity if exists
 // @access  Private
 router.post('/add', auth, async (req, res) => {
@@ -65,7 +65,7 @@ router.post('/add', auth, async (req, res) => {
     }
 });
 
-// @route   PUT api/cart/update/:productId
+// @route PUT api/cart/update/:productId
 // @desc    Update quantity of an item in cart
 // @access  Private
 router.put('/update/:productId', auth, async (req, res) => {
@@ -96,7 +96,7 @@ router.put('/update/:productId', auth, async (req, res) => {
     }
 });
 
-// @route   DELETE api/cart/remove/:productId
+// @route DELETE api/cart/remove/:productId
 // @desc    Remove item from cart
 // @access  Private
 router.delete('/remove/:productId', auth, async (req, res) => {
@@ -118,7 +118,7 @@ router.delete('/remove/:productId', auth, async (req, res) => {
     }
 });
 
-// @route   DELETE api/cart/clear
+// @route DELETE api/cart/clear
 // @desc    Clear user cart
 // @access  Private
 router.delete('/clear', auth, async (req, res) => {
@@ -138,4 +138,4 @@ router.delete('/clear', auth, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;
