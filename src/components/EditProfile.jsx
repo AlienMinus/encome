@@ -74,7 +74,7 @@ const EditProfile = ({ user, onSave }) => {
             <h5>Addresses</h5>
             {editedUser.addresses.map((address, index) => (
               <div key={index} className="row mb-2 align-items-center">
-                <div className="col-md-5">
+                <div className="col-12 col-sm-5 mb-2 mb-sm-0">
                   <input
                     type="text"
                     name="line"
@@ -84,7 +84,7 @@ const EditProfile = ({ user, onSave }) => {
                     placeholder="Address Line"
                   />
                 </div>
-                <div className="col-md-4">
+                <div className="col-12 col-sm-4 mb-2 mb-sm-0">
                   <input
                     type="text"
                     name="type"
@@ -94,7 +94,7 @@ const EditProfile = ({ user, onSave }) => {
                     placeholder="Type (e.g., Home, Work)"
                   />
                 </div>
-                <div className="col-md-1">
+                <div className="col-12 col-sm-2 d-flex justify-content-end">
                   <button className="btn btn-outline-danger btn-sm" onClick={() => handleDeleteAddress(index)}>
                     <FaTrash />
                   </button>
@@ -107,7 +107,7 @@ const EditProfile = ({ user, onSave }) => {
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" className="btn btn-primary" onClick={handleSaveChanges}>
+            <button type="button" className="btn btn-primary-custom" onClick={handleSaveChanges}>
               <FaSave className="me-1" /> Save Changes
             </button>
           </div>
