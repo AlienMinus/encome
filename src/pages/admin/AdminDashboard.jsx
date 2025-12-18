@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import './AdminDashboard.css';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminDashboard = () => {
@@ -13,22 +12,31 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard-container">
-      <h1>Admin Dashboard</h1>
-      <button onClick={handleLogout} className="logout-button">Logout</button>
+    <div className="container admin-dashboard-container">
+      <div className="d-flex justify-content-between align-items-center">
+        <h1>Admin Dashboard</h1>
+        <button onClick={handleLogout} className="logout-button">Logout</button>
+      </div>
       <p>Welcome to the Admin Dashboard!</p>
-      {/* Admin content will go here */}
-      <nav className="admin-nav">
-        <ul>
-          <li><Link to="/admin/products">Manage Products</Link></li>
-          <li><Link to="/admin/orders">Manage Orders</Link></li>
-          <li><Link to="/admin/users">Manage Users</Link></li>
-          {/* Add more admin links as needed */}
-        </ul>
-      </nav>
-      <div className="admin-content">
-        {/* This area will display different admin sections based on navigation */}
-        <p>Select an option from the navigation to manage content.</p>
+      <div className="row justify-content-center d-flex align-items-stretch">
+        <div className="col-md-6 mb-4">
+          <div className="card admin-card">
+            <div className="card-body">
+              <h5 className="card-title">Manage Products</h5>
+              <p className="card-text">Add, edit, and delete products.</p>
+              <Link to="/admin/products" className="btn btn-primary">Go to Products</Link>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 mb-4">
+          <div className="card admin-card">
+            <div className="card-body">
+              <h5 className="card-title">Manage Orders</h5>
+              <p className="card-text">View and process customer orders.</p>
+              <Link to="/admin/orders" className="btn btn-primary">Go to Orders</Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
