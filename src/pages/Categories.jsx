@@ -7,7 +7,7 @@ export default function Categories() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('/api/categories');
+                const response = await fetch('https://encome.onrender.com/api/categories');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }

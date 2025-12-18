@@ -11,7 +11,7 @@ export default function Products({ search, setSearch }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        const response = await fetch('https://encome.onrender.com/api/products');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

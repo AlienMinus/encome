@@ -18,13 +18,13 @@ const AdminProducts = () => {
   }, []);
 
   const fetchProducts = async () => {
-    const response = await fetch('/api/products');
+    const response = await fetch('https://encome.onrender.com/api/products');
     const data = await response.json();
     setProducts(data);
   };
 
   const fetchCategories = async () => {
-    const response = await fetch('/api/categories');
+    const response = await fetch('https://encome.onrender.com/api/categories');
     const data = await response.json();
     setCategories(data);
   };
@@ -48,13 +48,13 @@ const AdminProducts = () => {
 
   const handleSaveProduct = async (productData) => {
     if (productData._id) {
-      await fetch(`/api/products/${productData._id}`, {
+      await fetch(`https://encome.onrender.com/api/products/${productData._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(productData),
       });
     } else {
-      await fetch('/api/products', {
+      await fetch('https://encome.onrender.com/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(productData),
@@ -88,13 +88,13 @@ const AdminProducts = () => {
 
   const handleSaveCategory = async (categoryData) => {
     if (categoryData._id) {
-      await fetch(`/api/categories/${categoryData._id}`, {
+      await fetch(`https://encome.onrender.com/api/categories/${categoryData._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(categoryData),
       });
     } else {
-      await fetch('/api/categories', {
+      await fetch('https://encome.onrender.com/api/categories', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(categoryData),

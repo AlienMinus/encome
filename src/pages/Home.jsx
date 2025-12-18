@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        const response = await fetch('https://encome.onrender.com/api/products');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -26,7 +26,7 @@ export default function Home() {
 
     const fetchCategories = async () => {
       try {
-        const response = await fetch('/api/categories');
+        const response = await fetch('https://encome.onrender.com/api/categories');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
