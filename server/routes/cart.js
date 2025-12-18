@@ -1,5 +1,5 @@
 import express from 'express';
-import auth from '../middleware/auth.js'; // Assuming you have an auth middleware
+import auth from './auth.js'; // Assuming you have an auth middleware
 import Cart from '../models/Cart.js';
 import Product from '../models/Product.js';
 

@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
+import Recommended from '../components/Recommended';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from "../context/CartContext";
 import ProductReview from '../components/ProductReview';
