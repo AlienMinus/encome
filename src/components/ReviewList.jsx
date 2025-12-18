@@ -2,7 +2,7 @@ import React from 'react';
 import '../App.css';
 
 const ReviewList = ({ productId, reviews }) => {
-  const productReviews = reviews.filter(review => review.productId === productId);
+  const productReviews = reviews.filter(review => review.product === productId);
 
   return (
     <div className="review-list">
@@ -10,7 +10,7 @@ const ReviewList = ({ productId, reviews }) => {
       {productReviews.length > 0 ? (
         productReviews.map((review) => (
           <div key={review._id} className="review-item">
-            <div className="review-author">{review.author}</div>
+            <div className="review-author">{review.user.name}</div>
             <div className="review-rating">
               {[...Array(5)].map((_, i) => (
                 <span key={i} className={i < review.rating ? 'star-filled' : 'star-empty'}>&#9733;</span>

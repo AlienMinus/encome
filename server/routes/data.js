@@ -3,6 +3,7 @@ import Product from '../models/Product.js';
 import Category from '../models/Category.js';
 import Review from '../models/Review.js';
 import User from '../models/User.js'; // Import the User model
+import Order from '../models/Order.js'; // Import the Order model
 import mongoose from 'mongoose'; // Import mongoose
 
 const router = express.Router();
@@ -155,7 +156,7 @@ router.delete('/categories/:id', async (req, res) => {
 // Reviews API
 router.get('/reviews/:productId', async (req, res) => {
     try {
-      const reviews = await Review.find({ product: req.params.productId });
+      const reviews = await Review.find({ product: req.params.productId }).populate('user', 'name');
       res.json(reviews);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -211,6 +212,16 @@ router.put('/user/:userId', async (req, res) => {
     }
   } catch (error) {
     console.error("Error updating user profile:", error); // Log the actual error for debugging
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Orders API
+router.get('/orders', async (req, res) => {
+  try {
+    const orders = await Order.find().populate('userId', 'name email'); // Optionally populate user details
+    res.json(orders);
+  } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
