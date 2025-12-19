@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 export default function Navbar({ search, setSearch }) {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const { cartItems } = useCart();
-  const { isLoggedIn, logout, userRole } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
   const navigate = useNavigate();
   const navbarCollapseRef = useRef(null);
 
@@ -123,7 +123,7 @@ export default function Navbar({ search, setSearch }) {
                         <FaClipboardList size={18} className="me-2" /> Order History
                       </Link>
                     </li>
-                    {userRole === 'admin' && (
+                    {user && user.role === 'admin' && (
                       <li>
                         <Link className="dropdown-item" to="/admin">
                           <FaUserShield size={18} className="me-2" /> Admin Panel

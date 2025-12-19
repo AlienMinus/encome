@@ -5,7 +5,7 @@ import EditProfile from "../components/EditProfile";
 import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 const Profile = () => {
-  const { currentUserId, authToken } = useAuth(); // Get userId and authToken
+  const { user: authUser, getToken } = useAuth(); // Get user object and getToken function
   const [user, setUser] = useState(null); // Initialize user as null
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,13 +15,20 @@ const Profile = () => {
       setLoading(true); // Ensure loading state is true on retry or initial fetch
       setError(null); // Clear any previous errors
 
-      if (!currentUserId || !authToken) {
+      if (!authUser || !authUser._id) {
         setError("User not authenticated. Please log in.");
         setLoading(false);
         return;
       }
 
-      const apiUrl = `https://encome.onrender.com/api/user/${encodeURIComponent(currentUserId)}`;
+      const authToken = getToken();
+      if (!authToken) {
+        setError("User not authenticated. Please log in.");
+        setLoading(false);
+        return;
+      }
+
+      const apiUrl = `https://encome.onrender.com/api/user/${encodeURIComponent(authUser._id)}`;
 
       try {
         const response = await fetch(apiUrl, {
@@ -50,16 +57,22 @@ const Profile = () => {
     };
 
     fetchUserProfile();
-  }, [currentUserId, authToken]); // Re-run when currentUserId or authToken changes
+  }, [authUser, getToken]); // Re-run when authUser or getToken changes
 
   const handleProfileSave = async (updatedUser) => {
-    if (!currentUserId || !authToken) {
+    if (!authUser || !authUser._id) {
+      setError("User not authenticated.");
+      return;
+    }
+
+    const authToken = getToken();
+    if (!authToken) {
       setError("User not authenticated.");
       return;
     }
 
     try {
-      const response = await fetch(`https://encome.onrender.com/api/user/${encodeURIComponent(currentUserId)}`, {
+      const response = await fetch(`https://encome.onrender.com/api/user/${encodeURIComponent(authUser._id)}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

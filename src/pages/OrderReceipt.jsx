@@ -1,12 +1,35 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom'; // Import useLocation hook
+import React, { useState, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import '../App.css';
-import favicon from '../assets/favicon.png'; // Import the favicon
-
+import favicon from '../assets/favicon.png';
 
 const OrderReceipt = () => {
     const location = useLocation();
-    const orderDetails = location.state?.orderDetails; // Access orderDetails from location.state
+    const { orderId } = useParams();
+    const [orderDetails, setOrderDetails] = useState(location.state?.orderDetails);
+    const [loading, setLoading] = useState(!orderDetails);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!orderDetails && orderId) {
+            const fetchOrderDetails = async () => {
+                try {
+                    const response = await fetch(`https://encome.onrender.com/api/orders/${orderId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        setOrderDetails(data);
+                    } else {
+                        setError('Order not found.');
+                    }
+                } catch (err) {
+                    setError('Failed to fetch order details.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchOrderDetails();
+        }
+    }, [orderId, orderDetails]);
 
     const handleDownloadReceipt = () => {
         if (!orderDetails) return;
@@ -28,7 +51,7 @@ const OrderReceipt = () => {
                     <div style="margin-top: 30px; border-top: 1px solid #f8bbd0; padding-top: 20px;">
                         <h2 style="color: #c2185b;">Order Summary</h2>
                         <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
-                        <p><strong>Date:</strong> ${orderDetails.date}</p>
+                        <p><strong>Date:</strong> ${new Date(orderDetails.date).toLocaleDateString()}</p>
 
                         <h3 style="color: #c2185b;">Items Purchased:</h3>
                         <ul style="list-style: none; padding: 0; margin: 10px 0;">
@@ -62,13 +85,26 @@ const OrderReceipt = () => {
         const htmlContent = generateReceiptHtml();
         const newWindow = window.open();
         if (newWindow) {
-            newWindow.document.write(htmlContent);
+            Document.write(htmlContent);
             newWindow.document.close();
             newWindow.print();
         } else {
             alert('Please allow pop-ups for downloading the receipt.');
         }
     };
+
+    if (loading) {
+        return <div className="order-receipt-container"><h1>Loading order details...</h1></div>;
+    }
+
+    if (error) {
+        return (
+            <div className="order-receipt-container">
+                <h1>Order Not Found</h1>
+                <p className="order-error-message">{error}</p>
+            </div>
+        );
+    }
 
     if (!orderDetails) {
         return (
@@ -90,19 +126,19 @@ const OrderReceipt = () => {
             <div className="order-summary">
                 <h2>Order Summary</h2>
                 <p><strong>Order ID:</strong> {orderDetails.orderId}</p>
-                <p><strong>Date:</strong> {orderDetails.date}</p>
+                <p><strong>Date:</strong> {new Date(orderDetails.date).toLocaleDateString()}</p>
 
                 <h3>Items Purchased:</h3>
                 <ul className="item-list">
                     {orderDetails.items.map(item => (
                         <li key={item._id} className="item-detail">
-                            <span>{item.name} (x{item.quantity})</span>
-                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                            <span>{item.name} (x${item.quantity})</span>
+                            <span>$${(item.quantity * item.price).toFixed(2)}</span>
                         </li>
                     ))}
                 </ul>
                 <div className="total-amount">
-                    <strong>Total:</strong> <span>${orderDetails.total.toFixed(2)}</span>
+                    <strong>Total:</strong> <span>$${orderDetails.total.toFixed(2)}</span>
                 </div>
             </div>
 
@@ -116,7 +152,7 @@ const OrderReceipt = () => {
 
             <div className="payment-info">
                 <h2>Payment Method</h2>
-                <p>{orderDetails.paymentMethod}</p>
+                <p>${orderDetails.paymentMethod}</p>
             </div>
 
             <p className="order-footer">A confirmation email has been sent to your registered email address.</p>

@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from "react"; // Added useEffect
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
-import { loadStripe } from "@stripe/stripe-js";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
@@ -25,17 +24,20 @@ const Checkout = () => {
   const [profileError, setProfileError] = useState(null); // New state
 
   useEffect(() => {
+    console.log("User object:", user); // For debugging
     const fetchUserProfile = async () => {
       if (user && user._id) {
         setProfileLoading(true);
         setProfileError(null);
         try {
-          const token = localStorage.getItem("token");
+          const token = localStorage.getItem("authToken");
+          console.log("Auth token:", token); // For debugging
           const response = await fetch(
             `https://encome.onrender.com/api/user/${encodeURIComponent(
               user.email
             )}`,
             {
+              method: "GET",
               headers: {
                 Authorization: `Bearer ${token}`,
               },
@@ -45,17 +47,19 @@ const Checkout = () => {
             throw new Error("Failed to fetch user profile.");
           }
           const userData = await response.json();
+          console.log("Fetched user data:", userData); // For debugging
+          const shippingAddress = userData.addresses && userData.addresses[0] ? userData.addresses[0] : {};
           setShippingInfo((prevInfo) => ({
             ...prevInfo,
             name: userData.name || "",
             email: userData.email || "",
             // Assuming user profile has address fields like street, city, etc.
             // You might need to adjust these based on your User model
-            street: userData.shippingAddress?.street || "",
-            city: userData.shippingAddress?.city || "",
-            state: userData.shippingAddress?.state || "",
-            zip: userData.shippingAddress?.zip || "",
-            country: userData.shippingAddress?.country || "",
+            street: shippingAddress.street || "",
+            city: shippingAddress.city || "",
+            state: shippingAddress.state || "",
+            zip: shippingAddress.zip || "",
+            country: shippingAddress.country || "",
           }));
         } catch (err) {
           console.error("Error fetching user profile:", err);
@@ -64,6 +68,7 @@ const Checkout = () => {
           setProfileLoading(false);
         }
       } else {
+        console.log("User not logged in or missing _id"); // For debugging
         // If no user is logged in, ensure loading state is false
         setProfileLoading(false);
       }
@@ -143,7 +148,7 @@ const Checkout = () => {
         headers: {
           "Content-Type": "application/json",
           ...(user && {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           }),
         },
         body: JSON.stringify(orderDetails),

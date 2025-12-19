@@ -24,9 +24,9 @@ import AdminOrders from "./pages/admin/AdminOrders.jsx";
 
 // AdminProtectedRoute component for admin access
 const AdminProtectedRoute = ({ children }) => {
-  const { isLoggedIn, userRole } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
-  if (!isLoggedIn || userRole !== 'admin') {
+  if (!isLoggedIn || !user || user.role !== 'admin') {
     // Redirect to home or an unauthorized page
     return <Navigate to="/" replace />;
   }
@@ -53,7 +53,7 @@ function App() {
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="/order-receipt" element={<OrderReceipt />} />
+        <Route path="/order-receipt/:orderId" element={<OrderReceipt />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />

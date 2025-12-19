@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // Assuming axios is installed, or use fetch
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -9,7 +10,9 @@ const AdminOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get('https://encome.onrender.com/api/orders'); // Adjust URL as needed
+        const response = await axios.get('https://encome.onrender.com/api/orders', {
+          headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` }
+        });
         setOrders(response.data);
       } catch (err) {
         setError(err);
@@ -20,6 +23,19 @@ const AdminOrders = () => {
 
     fetchOrders();
   }, []);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const response = await axios.put(`https://encome.onrender.com/api/orders/${orderId}/status`, 
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      setOrders(orders.map(order => order.orderId === orderId ? response.data : order));
+    } catch (err) {
+      console.error("Failed to update order status:", err);
+      // Optionally show an error message to the user
+    }
+  };
 
   if (loading) {
     return <div className="container admin-orders-container">Loading orders...</div>;
@@ -34,32 +50,48 @@ const AdminOrders = () => {
       <div className="d-flex justify-content-between align-items-center">
         <h1>Manage Orders</h1>
       </div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <th>Customer Email</th>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Payment Method</th>
-            <th>Shipping Address</th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order._id}>
-              <td>{order.orderId}</td>
-              <td>{order.userEmail}</td>
-              <td>{order.date}</td>
-              <td>${order.total.toFixed(2)}</td>
-              <td>{order.paymentMethod}</td>
-              <td>
-                {order.shippingAddress.street}, {order.shippingAddress.city}, {order.shippingAddress.state}, {order.shippingAddress.zip}, {order.shippingAddress.country}
-              </td>
+      <div className="table-responsive">
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer Email</th>
+              <th>Date</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order._id}>
+                <td>{order.orderId}</td>
+                <td>{order.userEmail}</td>
+                <td>{new Date(order.date).toLocaleDateString()}</td>
+                <td>${order.total.toFixed(2)}</td>
+                <td>
+                  <select 
+                    className="form-select" 
+                    value={order.status} 
+                    onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Processing">Processing</option>
+                    <option value="Shipped">Shipped</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </td>
+                <td>
+                  <Link to={`/order-receipt/${order.orderId}`} className="btn btn-info btn-sm">
+                    View Receipt
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
