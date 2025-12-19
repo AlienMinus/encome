@@ -18,7 +18,7 @@ app.use(express.json());
 // Routes
 app.use("/api", authRoutes);
 app.use("/api", dataRoutes);
-app.use("/api/contact", contactRoutes);
+app.use("/api", contactRoutes);
 
 
 // MongoDB Connection

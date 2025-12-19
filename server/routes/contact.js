@@ -5,7 +5,7 @@ import Contact from '../models/Contact.js';
 // @route   POST api/contact
 // @desc    Save contact form submission
 // @access  Public
-router.post('/', async (req, res) => {
+router.post('/contact', async (req, res) => {
   const { name, email, message } = req.body;
 
   try {
