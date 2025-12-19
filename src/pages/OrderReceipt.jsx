@@ -85,7 +85,7 @@ const OrderReceipt = () => {
         const htmlContent = generateReceiptHtml();
         const newWindow = window.open();
         if (newWindow) {
-            Document.write(htmlContent);
+            newWindow.document.write(htmlContent);
             newWindow.document.close();
             newWindow.print();
         } else {

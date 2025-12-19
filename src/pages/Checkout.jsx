@@ -163,7 +163,7 @@ const Checkout = () => {
       console.log("Order Placed Successfully:", placedOrder);
 
       clearCart();
-      navigate("/order-receipt", { state: { orderDetails: placedOrder } });
+      navigate("/order-receipt/:orderId", { state: { orderDetails: placedOrder } });
     } catch (err) {
       console.error("Error placing order:", err);
       setError(
