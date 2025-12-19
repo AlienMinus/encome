@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"; // Import Navigate
+import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar.jsx";
 import Products from "./pages/Products.jsx";
@@ -7,7 +7,7 @@ import Cart from "./pages/Cart.jsx";
 import Home from "./pages/Home.jsx";
 import Categories from "./pages/Categories.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
-import Checkout from "./pages/Checkout.jsx"; // Import Checkout component
+import Checkout from "./pages/Checkout.jsx";
 import OrderReceipt from "./pages/OrderReceipt.jsx";
 import OrderHistory from "./pages/OrderHistory.jsx";
 import About from "./pages/About.jsx";
@@ -18,10 +18,11 @@ import Profile from "./pages/Profile.jsx";
 import Registration from "./components/Registration.jsx";
 import Login from "./components/Login.jsx";
 import PasswordReset from "./components/PasswordReset.jsx";
-import AdminDashboard from "./pages/admin/AdminDashboard.jsx"; // Import AdminDashboard
+import AdminDashboard from "./pages/admin/AdminDashboard.jsx";
 import AdminProducts from "./pages/admin/AdminProducts.jsx";
 import AdminOrders from "./pages/admin/AdminOrders.jsx";
 import AdminContacts from "./pages/admin/AdminContacts.jsx";
+import AuthInterceptor from "./components/AuthInterceptor.jsx"; // Import AuthInterceptor
 
 // AdminProtectedRoute component for admin access
 const AdminProtectedRoute = ({ children }) => {
@@ -36,10 +37,11 @@ const AdminProtectedRoute = ({ children }) => {
 
 function App() {
   const [search, setSearch] = useState("");
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn } = useAuth(); // isLoggedIn is still used by Navbar or other components if needed
 
   return (
     <Router>
+      <AuthInterceptor /> {/* Render AuthInterceptor here */}
       <Registration />
       <Login />
       <PasswordReset />

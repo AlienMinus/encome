@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import ProductForm from '../../components/admin/ProductForm';
 import CategoryForm from '../../components/admin/CategoryForm'; // Import CategoryForm
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { useAuth } from '../../context/AuthContext'; // Import useAuth
 
 const AdminProducts = () => {
   const [products, setProducts] = useState([]);
@@ -11,22 +13,45 @@ const AdminProducts = () => {
   const [categories, setCategories] = useState([]); // State for categories
   const [showCategoryModal, setShowCategoryModal] = useState(false); // State for category modal
   const [selectedCategory, setSelectedCategory] = useState(null); // State for selected category
+  const [filterCategory, setFilterCategory] = useState(''); // State for category filter
+  const [filterStock, setFilterStock] = useState(''); // State for stock filter
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
+
+  const { getToken } = useAuth(); // Get getToken from useAuth
 
   useEffect(() => {
     fetchProducts();
     fetchCategories(); // Fetch categories on component mount
-  }, []);
+  }, [filterCategory, filterStock, searchTerm]); // Add filters to dependency array
+  
+  useEffect(() => {
+    fetchProducts(); // Refetch products when filters change
+  }, [filterCategory, filterStock, searchTerm]);
 
   const fetchProducts = async () => {
-    const response = await fetch('https://encome.onrender.com/api/products');
-    const data = await response.json();
-    setProducts(data);
+    try {
+      let url = 'https://encome.onrender.com/api/products?';
+      if (filterCategory) url += `category=${filterCategory}&`;
+      if (filterStock) url += `stock=${filterStock}&`;
+      if (searchTerm) url += `search=${searchTerm}&`;
+      const response = await axios.get(url, {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      });
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
   };
 
   const fetchCategories = async () => {
-    const response = await fetch('https://encome.onrender.com/api/categories');
-    const data = await response.json();
-    setCategories(data);
+    try {
+      const response = await axios.get('https://encome.onrender.com/api/categories', {
+        headers: { Authorization: `Bearer ${getToken()}` }
+      });
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
   const handleAddProduct = () => {
@@ -41,27 +66,33 @@ const AdminProducts = () => {
 
   const handleDeleteProduct = async (_id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
-      await fetch(`/api/products/${_id}`, { method: 'DELETE' });
-      fetchProducts();
+      try {
+        await axios.delete(`https://encome.onrender.com/api/products/${_id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+        fetchProducts();
+      } catch (error) {
+        console.error("Error deleting product:", error);
+      }
     }
   };
 
   const handleSaveProduct = async (productData) => {
-    if (productData._id) {
-      await fetch(`https://encome.onrender.com/api/products/${productData._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData),
-      });
-    } else {
-      await fetch('https://encome.onrender.com/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData),
-      });
+    try {
+      if (productData._id) {
+        await axios.put(`https://encome.onrender.com/api/products/${productData._id}`, productData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+      } else {
+        await axios.post('https://encome.onrender.com/api/products', productData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+      }
+      fetchProducts();
+      setShowProductModal(false);
+    } catch (error) {
+      console.error("Error saving product:", error);
     }
-    fetchProducts();
-    setShowProductModal(false);
   };
 
   const handleCloseProductModal = () => {
@@ -81,27 +112,33 @@ const AdminProducts = () => {
 
   const handleDeleteCategory = async (_id) => {
     if (window.confirm('Are you sure you want to delete this category?')) {
-      await fetch(`/api/categories/${_id}`, { method: 'DELETE' });
-      fetchCategories();
+      try {
+        await axios.delete(`https://encome.onrender.com/api/categories/${_id}`, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+        fetchCategories();
+      } catch (error) {
+        console.error("Error deleting category:", error);
+      }
     }
   };
 
   const handleSaveCategory = async (categoryData) => {
-    if (categoryData._id) {
-      await fetch(`https://encome.onrender.com/api/categories/${categoryData._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(categoryData),
-      });
-    } else {
-      await fetch('https://encome.onrender.com/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(categoryData),
-      });
+    try {
+      if (categoryData._id) {
+        await axios.put(`https://encome.onrender.com/api/categories/${categoryData._id}`, categoryData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+      } else {
+        await axios.post('https://encome.onrender.com/api/categories', categoryData, {
+          headers: { Authorization: `Bearer ${getToken()}` }
+        });
+      }
+      fetchCategories();
+      setShowCategoryModal(false);
+    } catch (error) {
+      console.error("Error saving category:", error);
     }
-    fetchCategories();
-    setShowCategoryModal(false);
   };
 
   const handleCloseCategoryModal = () => {
@@ -127,6 +164,37 @@ const AdminProducts = () => {
       )}
 
       <div className="mb-5">
+        <div className="d-flex flex-wrap gap-3 mb-4">
+          <div className="form-group flex-grow-1">
+            <label htmlFor="searchProduct" className="form-label">Search Product</label>
+            <input
+              type="text"
+              className="form-control"
+              id="searchProduct"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="form-group flex-grow-1">
+            <label htmlFor="filterCategory" className="form-label">Filter by Category</label>
+            <select
+              className="form-select"
+              id="filterCategory"
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+            >
+              <option value="">All Categories</option>
+              {categories.map((category) => (
+                <option key={category._id} value={category.name}>{category.name}</option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group flex-grow-1">
+            <label htmlFor="filterStock" className="form-label">Filter by Stock</label>
+            <input type="number" className="form-control" id="filterStock" placeholder="Min stock" value={filterStock} onChange={(e) => setFilterStock(e.target.value)} />
+          </div>
+        </div>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h1>Manage Products</h1>
           <button onClick={handleAddProduct} className="btn btn-primary-custom">Add Product</button>

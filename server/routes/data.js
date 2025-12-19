@@ -13,12 +13,32 @@ const router = express.Router();
 // Products API
 router.get('/products', async (req, res) => {
   try {
-    const products = await Product.find();
+    const { category, search, minStock } = req.query;
+
+    const filter = {};
+
+    // Filter by category
+    if (category) {
+      filter.category = category;
+    }
+
+    // Filter by minimum stock
+    if (minStock) {
+      filter.stock = { $gte: Number(minStock) };
+    }
+
+    // Search by product name (case-insensitive)
+    if (search) {
+      filter.name = { $regex: search, $options: 'i' };
+    }
+
+    const products = await Product.find(filter);
     res.json(products);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 router.post('/products', async (req, res) => {
   const product = new Product(req.body);
