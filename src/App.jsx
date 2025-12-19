@@ -21,6 +21,7 @@ import PasswordReset from "./components/PasswordReset.jsx";
 import AdminDashboard from "./pages/admin/AdminDashboard.jsx"; // Import AdminDashboard
 import AdminProducts from "./pages/admin/AdminProducts.jsx";
 import AdminOrders from "./pages/admin/AdminOrders.jsx";
+import AdminContacts from "./pages/admin/AdminContacts.jsx";
 
 // AdminProtectedRoute component for admin access
 const AdminProtectedRoute = ({ children }) => {
@@ -81,6 +82,14 @@ function App() {
           element={
             <AdminProtectedRoute>
               <AdminOrders />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/contacts"
+          element={
+            <AdminProtectedRoute>
+              <AdminContacts />
             </AdminProtectedRoute>
           }
         />

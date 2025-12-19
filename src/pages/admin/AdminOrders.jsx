@@ -80,6 +80,7 @@ const AdminOrders = () => {
                     <option value="Shipped">Shipped</option>
                     <option value="Delivered">Delivered</option>
                     <option value="Cancelled">Cancelled</option>
+                    <option value="Refunded">Refunded</option>
                   </select>
                 </td>
                 <td>

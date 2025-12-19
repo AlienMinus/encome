@@ -37,6 +37,15 @@ const AdminDashboard = () => {
             </div>
           </div>
         </div>
+        <div className="col-md-6 mb-4">
+          <div className="card admin-card">
+            <div className="card-body">
+              <h5 className="card-title">Manage Contacts</h5>
+              <p className="card-text">Manage customer contact information.</p>
+              <Link to="/admin/contacts" className="btn btn-primary-custom">Go to Contacts</Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
