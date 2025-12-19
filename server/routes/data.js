@@ -5,6 +5,7 @@ import Review from '../models/Review.js';
 import User from '../models/User.js'; // Import the User model
 import Order from '../models/Order.js'; // Import the Order model
 import mongoose from 'mongoose'; // Import mongoose
+import adminMiddleware from '../middleware/adminMiddleware.js'; // Import adminMiddleware
 import authenticateToken from '../middleware/authMiddleware.js'; // Import authenticateToken middleware
 
 const router = express.Router();
@@ -304,6 +305,47 @@ router.get('/orders/history', authenticateToken, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+router.put('/orders/:orderId/status', adminMiddleware, async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    if (!status) {
+      return res.status(400).json({ message: 'Status is required.' });
+    }
+
+    const updatedOrder = await Order.findOneAndUpdate(
+      { orderId },
+      { status },
+      { new: true }
+    );
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    res.json(updatedOrder);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get('/orders/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findOne({ orderId });
+
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found.' });
+    }
+
+    res.json(order);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 
 
