@@ -1,22 +1,73 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react'; // Added useEffect
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const [shippingInfo, setShippingInfo] = useState({
         name: '',
+        email: '',
         street: '',
         city: '',
         state: '',
         zip: '',
         country: '',
     });
-
     const [paymentMethod, setPaymentMethod] = useState('Credit Card');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [profileLoading, setProfileLoading] = useState(true); // New state
+    const [profileError, setProfileError] = useState(null);   // New state
+
+
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            if (user && user._id) {
+                setProfileLoading(true);
+                setProfileError(null);
+                try {
+                    const token = localStorage.getItem('token');
+                    const response = await fetch(`https://encome.onrender.com/api/data/user/${user._id}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch user profile.');
+                    }
+                    const userData = await response.json();
+                    setShippingInfo(prevInfo => ({
+                        ...prevInfo,
+                        name: userData.name || '',
+                        email: userData.email || '',
+                        // Assuming user profile has address fields like street, city, etc.
+                        // You might need to adjust these based on your User model
+                        street: userData.shippingAddress?.street || '',
+                        city: userData.shippingAddress?.city || '',
+                        state: userData.shippingAddress?.state || '',
+                        zip: userData.shippingAddress?.zip || '',
+                        country: userData.shippingAddress?.country || '',
+                    }));
+                } catch (err) {
+                    console.error("Error fetching user profile:", err);
+                    setProfileError("Failed to load your profile information.");
+                } finally {
+                    setProfileLoading(false);
+                }
+            } else {
+                // If no user is logged in, ensure loading state is false
+                setProfileLoading(false);
+            }
+        };
+
+        fetchUserProfile();
+    }, [user]); // Rerun when user object changes
+
 
     const handleShippingChange = (e) => {
         const { name, value } = e.target;
@@ -27,11 +78,14 @@ const Checkout = () => {
         setPaymentMethod(e.target.value);
     };
 
-    const handlePlaceOrder = (e) => {
+    const handlePlaceOrder = async (e) => {
         e.preventDefault();
+        setLoading(true);
+        setError(null);
 
         if (cartItems.length === 0) {
             alert('Your cart is empty. Please add items before checking out.');
+            setLoading(false);
             return;
         }
 
@@ -39,27 +93,30 @@ const Checkout = () => {
             const now = new Date();
             const date = now.toISOString().slice(0, 10).replace(/-/g, '');
             const time = now.toTimeString().slice(0, 8).replace(/:/g, '');
-
-            let orderNumberOfTheDay = 1;
-            const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || {};
-
-            if (orderHistory[date]) {
-                orderNumberOfTheDay = orderHistory[date] + 1;
-            }
-
-            orderHistory[date] = orderNumberOfTheDay;
-            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
-
-            return `${date}${time}${orderNumberOfTheDay}`;
+            return `${date}${time}${Math.floor(Math.random() * 10000)}`;
         };
 
-        // Generate a mock order ID
         const orderId = generateOrderId();
         const orderDate = new Date().toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
         });
+
+        let currentUserId = null;
+        let currentUserEmail = null;
+
+        if (user) {
+            currentUserId = user._id;
+            currentUserEmail = user.email;
+        } else {
+            if (!shippingInfo.email) {
+                setError('Email is required for guest checkout.');
+                setLoading(false);
+                return;
+            }
+            currentUserEmail = shippingInfo.email;
+        }
 
         const orderDetails = {
             orderId,
@@ -73,18 +130,36 @@ const Checkout = () => {
             total: getCartTotal(),
             shippingAddress: shippingInfo,
             paymentMethod: paymentMethod,
+            userId: currentUserId,
+            userEmail: currentUserEmail,
         };
 
-        // In a real app, you would send this to a backend API
-        console.log('Placing Order:', orderDetails);
+        try {
+            const response = await fetch('https://encome.onrender.com/api/data/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(user && { 'Authorization': `Bearer ${localStorage.getItem('token')}` })
+                },
+                body: JSON.stringify(orderDetails),
+            });
 
-        // Store order in local storage for OrderHistory page (mock persistence)
-        const pastOrders = JSON.parse(localStorage.getItem('pastOrders')) || [];
-        localStorage.setItem('pastOrders', JSON.stringify([...pastOrders, orderDetails]));
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to place order.');
+            }
 
-        clearCart(); // Clear the cart after placing the order
+            const placedOrder = await response.json();
+            console.log('Order Placed Successfully:', placedOrder);
 
-        navigate('/order-receipt', { state: { orderDetails } });
+            clearCart();
+            navigate('/order-receipt', { state: { orderDetails: placedOrder } });
+        } catch (err) {
+            console.error('Error placing order:', err);
+            setError(err.message || 'An unexpected error occurred. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -114,72 +189,91 @@ const Checkout = () => {
 
             <form onSubmit={handlePlaceOrder} className="checkout-form">
                 <h2>Shipping Information</h2>
-                <div className="form-group">
-                    <label htmlFor="name">Full Name</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={shippingInfo.name}
-                        onChange={handleShippingChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="street">Street Address</label>
-                    <input
-                        type="text"
-                        id="street"
-                        name="street"
-                        value={shippingInfo.street}
-                        onChange={handleShippingChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="city">City</label>
-                    <input
-                        type="text"
-                        id="city"
-                        name="city"
-                        value={shippingInfo.city}
-                        onChange={handleShippingChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="state">State/Province</label>
-                    <input
-                        type="text"
-                        id="state"
-                        name="state"
-                        value={shippingInfo.state}
-                        onChange={handleShippingChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="zip">Zip/Postal Code</label>
-                    <input
-                        type="text"
-                        id="zip"
-                        name="zip"
-                        value={shippingInfo.zip}
-                        onChange={handleShippingChange}
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="country">Country</label>
-                    <input
-                        type="text"
-                        id="country"
-                        name="country"
-                        value={shippingInfo.country}
-                        onChange={handleShippingChange}
-                        required
-                    />
-                </div>
+                {profileLoading ? (
+                    <p>Loading profile information...</p>
+                ) : profileError ? (
+                    <p className="error-message">{profileError}</p>
+                ) : (
+                    <>
+                        <div className="form-group">
+                            <label htmlFor="name">Full Name</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={shippingInfo.name}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="email">Email Address</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={shippingInfo.email}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="street">Street Address</label>
+                            <input
+                                type="text"
+                                id="street"
+                                name="street"
+                                value={shippingInfo.street}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="city">City</label>
+                            <input
+                                type="text"
+                                id="city"
+                                name="city"
+                                value={shippingInfo.city}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="state">State/Province</label>
+                            <input
+                                type="text"
+                                id="state"
+                                name="state"
+                                value={shippingInfo.state}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="zip">Zip/Postal Code</label>
+                            <input
+                                type="text"
+                                id="zip"
+                                name="zip"
+                                value={shippingInfo.zip}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="country">Country</label>
+                            <input
+                                type="text"
+                                id="country"
+                                name="country"
+                                value={shippingInfo.country}
+                                onChange={handleShippingChange}
+                                required
+                            />
+                        </div>
+                    </>
+                )}
 
                 <h2>Payment Information</h2>
                 <div className="form-group">
@@ -216,8 +310,10 @@ const Checkout = () => {
                         </label>
                     </div>
                 </div>
-
-                <button type="submit" className="place-order-button">Place Order</button>
+                {error && <p className="error-message">{error}</p>}
+                <button type="submit" className="place-order-button" disabled={loading || profileLoading}>
+                    {loading || profileLoading ? 'Loading...' : 'Place Order'}
+                </button>
             </form>
         </div>
     );

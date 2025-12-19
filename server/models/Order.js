@@ -86,12 +86,12 @@ const orderSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
+    required: false, // Made optional
   },
   // Or simply store the username/email for historical purposes
   userEmail: {
     type: String,
-    required: true,
+    required: false, // Made optional
     trim: true,
   },
 }, { timestamps: true });

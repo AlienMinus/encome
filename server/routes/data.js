@@ -5,6 +5,7 @@ import Review from '../models/Review.js';
 import User from '../models/User.js'; // Import the User model
 import Order from '../models/Order.js'; // Import the Order model
 import mongoose from 'mongoose'; // Import mongoose
+import authenticateToken from '../middleware/authMiddleware.js'; // Import authenticateToken middleware
 
 const router = express.Router();
 
@@ -223,6 +224,47 @@ router.get('/orders', async (req, res) => {
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/orders', authenticateToken, async (req, res) => {
+  const { orderId, date, items, total, shippingAddress, paymentMethod } = req.body;
+
+  let userId = null;
+  let userEmail = null;
+
+  if (req.user) {
+    userId = req.user._id;
+    userEmail = req.user.email;
+  } else {
+    // Guest user
+    if (!shippingAddress || !shippingAddress.email) {
+      return res.status(400).json({ message: 'Guest checkout requires an email in shipping address.' });
+    }
+    userEmail = shippingAddress.email;
+  }
+
+  // Basic validation
+  if (!orderId || !date || !items || items.length === 0 || !total || !shippingAddress || !paymentMethod) {
+    return res.status(400).json({ message: 'Missing required order fields.' });
+  }
+
+  try {
+    const newOrder = new Order({
+      orderId,
+      date,
+      items,
+      total,
+      shippingAddress,
+      paymentMethod,
+      userId,        // Will be null for guest users
+      userEmail,     // Will be from req.user.email or shippingAddress.email
+    });
+
+    await newOrder.save();
+    res.status(201).json(newOrder);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
