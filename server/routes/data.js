@@ -293,6 +293,18 @@ router.post('/orders', authenticateToken, async (req, res) => {
   }
 });
 
+router.get('/orders/history', authenticateToken, async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Authorization required.' });
+  }
+  try {
+    const orders = await Order.find({ userEmail: req.user.email });
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 
 export default router;
