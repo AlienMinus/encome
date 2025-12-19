@@ -175,47 +175,72 @@ router.post('/reviews', async (req, res) => {
 });
 
 // User Profile API
-router.get('/user/:userId', async (req, res) => {
+router.get('/user/:identifier', async (req, res) => {
   try {
+    const { identifier } = req.params;
     let user;
-    if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
-      user = await User.findById(req.params.userId).select('-passwords'); // Exclude passwords
-    } else {
-      // For non-ObjectId user IDs (e.g., 'admin')
-      user = await User.findOne({ userId: req.params.userId }).select('-passwords'); // Exclude passwords
+
+    // 1️⃣ Mongo ObjectId
+    if (mongoose.Types.ObjectId.isValid(identifier)) {
+      user = await User.findById(identifier).select('-passwords');
     }
-    
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    // 2️⃣ Email
+    else if (identifier.includes('@')) {
+      user = await User.findOne({ email: identifier }).select('-passwords');
     }
+    // 3️⃣ Custom userId (e.g., admin)
+    else {
+      user = await User.findOne({ userId: identifier }).select('-passwords');
+    }
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
   } catch (error) {
-    console.error("Error fetching user profile:", error); // Log the actual error for debugging
+    console.error("Error fetching user profile:", error);
     res.status(500).json({ message: error.message });
   }
 });
 
-router.put('/user/:userId', async (req, res) => {
+
+router.put('/user/:identifier', async (req, res) => {
   try {
+    const { identifier } = req.params;
     let updatedUser;
-    if (mongoose.Types.ObjectId.isValid(req.params.userId)) {
-      updatedUser = await User.findByIdAndUpdate(req.params.userId, req.body, { new: true }).select('-passwords'); // Exclude passwords
+
+    if (mongoose.Types.ObjectId.isValid(identifier)) {
+      updatedUser = await User.findByIdAndUpdate(
+        identifier,
+        req.body,
+        { new: true }
+      ).select('-passwords');
+    } else if (identifier.includes('@')) {
+      updatedUser = await User.findOneAndUpdate(
+        { email: identifier },
+        req.body,
+        { new: true }
+      ).select('-passwords');
     } else {
-      // For non-ObjectId user IDs (e.g., 'admin_user_id')
-      updatedUser = await User.findOneAndUpdate({ userId: req.params.userId }, req.body, { new: true }).select('-passwords'); // Exclude passwords
+      updatedUser = await User.findOneAndUpdate(
+        { userId: identifier },
+        req.body,
+        { new: true }
+      ).select('-passwords');
     }
 
-    if (updatedUser) {
-      res.json(updatedUser);
-    } else {
-      res.status(404).json({ message: 'User not found' });
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
     }
+
+    res.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user profile:", error); // Log the actual error for debugging
+    console.error("Error updating user profile:", error);
     res.status(500).json({ message: error.message });
   }
 });
+
 
 // Orders API
 router.get('/orders', async (req, res) => {
@@ -267,5 +292,7 @@ router.post('/orders', authenticateToken, async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+
 
 export default router;
