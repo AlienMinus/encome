@@ -28,7 +28,7 @@ const AdminOrders = () => {
     try {
       const response = await axios.put(`https://encome.onrender.com/api/orders/${orderId}/status`, 
         { status: newStatus },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
       );
       setOrders(orders.map(order => order.orderId === orderId ? response.data : order));
     } catch (err) {
@@ -83,7 +83,7 @@ const AdminOrders = () => {
                   </select>
                 </td>
                 <td>
-                  <Link to={`/order-receipt/${order.orderId}`} className="btn btn-info btn-sm">
+                  <Link to={`/order-receipt/${order.orderId}`} className="btn btn-primary-custom btn-sm">
                     View Receipt
                   </Link>
                 </td>

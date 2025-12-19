@@ -1,9 +1,44 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'; // Import contact icons
 import favicon from '../assets/favicon.png'; // Import the favicon
 
 const Contact = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: '',
+    });
+    const [isMessageSent, setIsMessageSent] = useState(false);
+    const [error, setError] = useState('');
+
+    const { name, email, message } = formData;
+
+    const onChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+    const onSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch('https://encome.onrender.com/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (res.ok) {
+                setIsMessageSent(true);
+                setFormData({ name: '', email: '', message: '' });
+                setTimeout(() => setIsMessageSent(false), 5000);
+            } else {
+                setError('Failed to send message. Please try again later.');
+            }
+        } catch (err) {
+            setError('Failed to send message. Please try again later.');
+        }
+    };
+
     return (
         <div className="container contact-us-container">
             <img src={favicon} alt="Company Logo" className="contact-us-logo" />
@@ -31,22 +66,20 @@ const Contact = () => {
 
             <section className="contact-us-section">
                 <h2>Send Us a Message</h2>
-                <form className="contact-form">
+                {isMessageSent && <div className="alert alert-success">Message sent successfully!</div>}
+                {error && <div className="alert alert-danger">{error}</div>}
+                <form className="contact-form" onSubmit={onSubmit}>
                     <div className="form-group">
                         <label htmlFor="name">Your Name</label>
-                        <input type="text" id="name" name="name" required />
+                        <input type="text" id="name" name="name" value={name} onChange={onChange} required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="email">Your Email</label>
-                        <input type="email" id="email" name="email" required />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" required />
+                        <input type="email" id="email" name="email" value={email} onChange={onChange} required />
                     </div>
                     <div className="form-group">
                         <label htmlFor="message">Your Message</label>
-                        <textarea id="message" name="message" rows="5" required></textarea>
+                        <textarea id="message" name="message" value={message} onChange={onChange} rows="5" required></textarea>
                     </div>
                     <button type="submit" className="btn btn-primary-custom">Send Message</button>
                 </form>
