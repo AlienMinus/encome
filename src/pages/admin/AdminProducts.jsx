@@ -20,28 +20,33 @@ const AdminProducts = () => {
   const { getToken } = useAuth(); // Get getToken from useAuth
 
   useEffect(() => {
-    fetchProducts();
     fetchCategories(); // Fetch categories on component mount
-  }, [filterCategory, filterStock, searchTerm]); // Add filters to dependency array
+  }, []); // Add filters to dependency array
   
   useEffect(() => {
     fetchProducts(); // Refetch products when filters change
   }, [filterCategory, filterStock, searchTerm]);
 
   const fetchProducts = async () => {
-    try {
-      let url = 'https://encome.onrender.com/api/products?';
-      if (filterCategory) url += `category=${filterCategory}&`;
-      if (filterStock) url += `stock=${filterStock}&`;
-      if (searchTerm) url += `search=${searchTerm}&`;
-      const response = await axios.get(url, {
+  try {
+    const params = new URLSearchParams();
+
+    if (filterCategory) params.append("category", filterCategory);
+    if (filterStock) params.append("minStock", filterStock);
+    if (searchTerm) params.append("search", searchTerm);
+
+    const response = await axios.get(
+      `https://encome.onrender.com/api/products?${params.toString()}`,
+      {
         headers: { Authorization: `Bearer ${getToken()}` }
-      });
-      setProducts(response.data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  };
+      }
+    );
+
+    setProducts(response.data);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+  }
+};
 
   const fetchCategories = async () => {
     try {

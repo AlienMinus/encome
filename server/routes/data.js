@@ -13,7 +13,7 @@ const router = express.Router();
 // Products API
 router.get('/products', async (req, res) => {
   try {
-    const { category, search, minStock } = req.query;
+    const { category, search, stock, minStock, maxStock } = req.query;
 
     const filter = {};
 
@@ -22,9 +22,17 @@ router.get('/products', async (req, res) => {
       filter.category = category;
     }
 
-    // Filter by minimum stock
-    if (minStock) {
-      filter.stock = { $gte: Number(minStock) };
+    // Filter by stock range
+    if (minStock || maxStock) {
+      filter.stock = {};
+      if (minStock) {
+        filter.stock.$gte = Number(minStock);
+      }
+      if (maxStock) {
+        filter.stock.$lte = Number(maxStock);
+      }
+    } else if (stock) { // Exact stock match if no range specified
+      filter.stock = Number(stock);
     }
 
     // Search by product name (case-insensitive)
