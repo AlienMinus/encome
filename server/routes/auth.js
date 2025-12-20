@@ -64,7 +64,7 @@ router.post("/login", async (req, res) => {
       const token = jwt.sign(
         { id: adminUser._id.toString(), role: 'admin' }, // Use actual _id from database
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "7d" }
       );
 
       return res.json({
@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role }, // Include role in JWT payload
       process.env.JWT_SECRET, // Use a strong secret from environment variables
-      { expiresIn: "1h" } // Token expires in 1 hour
+      { expiresIn: "7d" } // Token expires in 7 days
     );
 
     res.json({
