@@ -52,9 +52,9 @@ router.post("/login", async (req, res) => {
       return res.json({ success: false, message: "All fields required" });
     }
 
-    if (email === 'dasmanasranjan2005@gmail.com' && password === '123456') {
+    if (email === 'admin@shinex.com' && password === 'Admin@404') {
       // Find the admin user in the database
-      const adminUser = await User.findOne({ email: 'dasmanasranjan2005@gmail.com' });
+      const adminUser = await User.findOne({ email: 'admin@shinex.com' });
 
       if (!adminUser) {
         // This case should ideally not happen if the admin user is seeded correctly
