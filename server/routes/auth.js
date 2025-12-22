@@ -94,7 +94,7 @@ router.post("/login", async (req, res) => {
     const token = jwt.sign(
       { id: user._id, role: user.role }, // Include role in JWT payload
       process.env.JWT_SECRET, // Use a strong secret from environment variables
-      { expiresIn: "7d" } // Token expires in 7 days
+      { expiresIn: "30d" } // Token expires in 30 days
     );
 
     res.json({
