@@ -3,6 +3,7 @@ import '../App.css'; // Import the CSS file
 import ProductCard from "../components/ProductCard";
 import CategoryCard from "../components/CategoryCard";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Home() {
   const [carouselProducts, setCarouselProducts] = useState([]);
@@ -12,11 +13,8 @@ export default function Home() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://encome.onrender.com/api/products');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const products = await response.json();
+        const response = await axios.get('https://encome.onrender.com/api/products');
+        const products = response.data;
         setCarouselProducts(products.sort(() => 0.5 - Math.random()).slice(0, 5));
         setFeaturedProducts(products.sort(() => 0.5 - Math.random()).slice(0, 4));
       } catch (error) {
@@ -26,11 +24,8 @@ export default function Home() {
 
     const fetchCategories = async () => {
       try {
-        const response = await fetch('https://encome.onrender.com/api/categories');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const categoriesData = await response.json();
+        const response = await axios.get('https://encome.onrender.com/api/categories');
+        const categoriesData = response.data;
         setCategories(categoriesData.sort(() => 0.5 - Math.random()).slice(0, 4));
       } catch (error) {
         console.error("Error fetching categories:", error);

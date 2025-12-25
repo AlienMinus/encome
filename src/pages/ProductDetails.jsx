@@ -6,6 +6,7 @@ import { useCart } from "../context/CartContext";
 import ProductReview from '../components/ProductReview';
 import ReviewList from '../components/ReviewList';
 import Rating from '../components/Rating';
+import axios from "axios";
 
 const API_BASE_URL = "https://encome.onrender.com/api";
 
@@ -15,87 +16,39 @@ const ProductDetails = () => {
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // State to manage the dynamic product rating
-  const [productRating, setProductRating] = useState(0);
+  const fetchProductAndReviews = async () => {
+    try {
+      // Fetch product
+      const productResponse = await axios.get(`${API_BASE_URL}/products/${id}`);
+      setProduct(productResponse.data);
+
+      // Fetch reviews
+      const reviewsResponse = await axios.get(`${API_BASE_URL}/reviews/${id}`);
+      setReviews(reviewsResponse.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   useEffect(() => {
-    const fetchProductAndReviews = async () => {
-      try {
-        // Fetch product
-        const productResponse = await fetch(`${API_BASE_URL}/products/${id}`);
-        if (!productResponse.ok) {
-          throw new Error("Product not found");
-        }
-        const productData = await productResponse.json();
-        setProduct(productData);
-        setProductRating(productData.rating);
-
-        // Fetch reviews
-        const reviewsResponse = await fetch(`${API_BASE_URL}/reviews/${id}`);
-        if (!reviewsResponse.ok) {
-          throw new Error("Could not fetch reviews");
-        }
-        const reviewsData = await reviewsResponse.json();
-        setReviews(reviewsData);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchProductAndReviews();
   }, [id]);
 
   const handleReviewSubmit = async (newReview) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/reviews`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...newReview, product: id }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit review");
-      }
-
-      const savedReview = await response.json();
-      setReviews((prevReviews) => {
-        const updatedReviews = [savedReview, ...prevReviews];
-
-        // Recalculate average rating
-        const totalRating = updatedReviews.reduce(
-          (sum, review) => sum + review.rating,
-          0
-        );
-        const newAverageRating = totalRating / updatedReviews.length;
-        setProductRating(newAverageRating); // Update the product rating state
-
-        return updatedReviews;
-      });
+      await axios.post(`${API_BASE_URL}/reviews`, { ...newReview, product: id });
+      // Refetch product and reviews to get updated rating
+      fetchProductAndReviews();
     } catch (err) {
       console.error("Error submitting review:", err);
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
   if (!product) {
     return <div>Product not found</div>;
   }
-
+  
   const originalPrice = (product.price * (Math.random() * 0.4 + 1.1)).toFixed(
     2
   );
@@ -172,19 +125,10 @@ const ProductDetails = () => {
             <strong>Category:</strong> {product.category}
           </p>
           <div className="rating-section">
-            <strong>Rating:</strong>
-            <div className="stars">
-              {[...Array(5)].map((_, i) => (
-                <span
-                  key={i}
-                  className={
-                    i < Math.round(productRating) ? "star-filled" : "star-empty"
-                  }
-                >
-                  &#9733;
-                </span>
-              ))}
-            </div>
+            <Rating
+              value={product.averageRating}
+              text={`${product.numOfReviews} reviews`}
+            />
           </div>
           <p>
             <strong>Stock:</strong>{" "}
@@ -222,12 +166,10 @@ const ProductDetails = () => {
         <div className="col-md-12">
           <ReviewList productId={product._id} reviews={reviews} />
 
-          <div className="row container mb-5">
-            <Recommended
+          <Recommended
               currentProductId={product._id}
               currentProductCategory={product.category}
             />
-          </div>
         </div>
       </div>
     </div>

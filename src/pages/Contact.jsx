@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../App.css';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa'; // Import contact icons
 import favicon from '../assets/favicon.png'; // Import the favicon
+import axios from 'axios';
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -10,7 +11,6 @@ const Contact = () => {
         message: '',
     });
     const [isMessageSent, setIsMessageSent] = useState(false);
-    const [error, setError] = useState('');
 
     const { name, email, message } = formData;
 
@@ -19,23 +19,15 @@ const Contact = () => {
     const onSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch('https://encome.onrender.com/api/contact', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+            const res = await axios.post('https://encome.onrender.com/api/contact', formData);
 
-            if (res.ok) {
+            if (res.status === 200) {
                 setIsMessageSent(true);
                 setFormData({ name: '', email: '', message: '' });
                 setTimeout(() => setIsMessageSent(false), 5000);
-            } else {
-                setError('Failed to send message. Please try again later.');
             }
         } catch (err) {
-            setError('Failed to send message. Please try again later.');
+            console.error('Failed to send message.', err);
         }
     };
 
@@ -67,7 +59,6 @@ const Contact = () => {
             <section className="contact-us-section">
                 <h2>Send Us a Message</h2>
                 {isMessageSent && <div className="alert alert-success">Message sent successfully!</div>}
-                {error && <div className="alert alert-danger">{error}</div>}
                 <form className="contact-form" onSubmit={onSubmit}>
                     <div className="form-group">
                         <label htmlFor="name">Your Name</label>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaEdit, FaKey } from "react-icons/fa";
 import "../App.css";
 import EditProfile from "../components/EditProfile";
+import Loading from "../components/Loading"; // Import Loading component
 import { useAuth } from "../context/AuthContext"; // Import useAuth
 
 const Profile = () => {
@@ -40,7 +41,7 @@ const Profile = () => {
         if (response.status === 404) {
           setError("User profile not found. It might have been deleted or there's an issue with your account. Please try logging out and logging back in.");
           // Optionally, force logout here if a 404 on profile is considered critical
-          // logout();
+          logout();
           return;
         }
 
@@ -105,7 +106,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <div className="container mt-5 text-center">Loading profile...</div>;
+    return <Loading isLoading={loading} />;
   }
 
   if (error) {

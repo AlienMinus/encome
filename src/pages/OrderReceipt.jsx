@@ -2,34 +2,35 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import '../App.css';
 import favicon from '../assets/favicon.png';
+import axios from 'axios';
+import { useLoading } from '../context/LoadingContext';
+import Loading from '../components/Loading';
 
 const OrderReceipt = () => {
     const location = useLocation();
     const { orderId } = useParams();
     const [orderDetails, setOrderDetails] = useState(location.state?.orderDetails);
-    const [loading, setLoading] = useState(!orderDetails);
+    const { loading, setLoading } = useLoading();
     const [error, setError] = useState(null);
 
     useEffect(() => {
         if (!orderDetails && orderId) {
             const fetchOrderDetails = async () => {
+                setLoading(true);
+                setError(null);
                 try {
-                    const response = await fetch(`https://encome.onrender.com/api/orders/${orderId}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        setOrderDetails(data);
-                    } else {
-                        setError('Order not found.');
-                    }
+                    const response = await axios.get(`https://encome.onrender.com/api/orders/${orderId}`);
+                    setOrderDetails(response.data);
                 } catch (err) {
-                    setError('Failed to fetch order details.');
+                    console.error('Failed to fetch order details.', err);
+                    setError('Failed to fetch order details. Please try again later.');
                 } finally {
                     setLoading(false);
                 }
             };
             fetchOrderDetails();
         }
-    }, [orderId, orderDetails]);
+    }, [orderId, orderDetails, setLoading]);
 
     const handleDownloadReceipt = () => {
         if (!orderDetails) return;
@@ -94,7 +95,7 @@ const OrderReceipt = () => {
     };
 
     if (loading) {
-        return <div className="order-receipt-container"><h1>Loading order details...</h1></div>;
+        return <Loading />;
     }
 
     if (error) {
@@ -133,12 +134,12 @@ const OrderReceipt = () => {
                     {orderDetails.items.map(item => (
                         <li key={item._id} className="item-detail">
                             <span>{item.name} (x${item.quantity})</span>
-                            <span>$${(item.quantity * item.price).toFixed(2)}</span>
+                            <span>${(item.quantity * item.price).toFixed(2)}</span>
                         </li>
                     ))}
                 </ul>
                 <div className="total-amount">
-                    <strong>Total:</strong> <span>$${orderDetails.total.toFixed(2)}</span>
+                    <strong>Total:</strong> <span>${orderDetails.total.toFixed(2)}</span>
                 </div>
             </div>
 

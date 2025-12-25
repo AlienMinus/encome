@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import CategoryCard from "../components/CategoryCard";
+import axios from "axios";
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
@@ -7,12 +8,8 @@ export default function Categories() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('https://encome.onrender.com/api/categories');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                setCategories(data);
+                const response = await axios.get('https://encome.onrender.com/api/categories');
+                setCategories(response.data);
             } catch (error) {
                 console.error("Error fetching categories:", error);
             }

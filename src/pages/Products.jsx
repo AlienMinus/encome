@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
+import axios from "axios";
 
 export default function Products({ search, setSearch }) {
   const [searchParams] = useSearchParams();
@@ -11,12 +12,8 @@ export default function Products({ search, setSearch }) {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('https://encome.onrender.com/api/products');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setProducts(data); // Set products from API
+        const response = await axios.get('https://encome.onrender.com/api/products');
+        setProducts(response.data); // Set products from API
       } catch (error) {
         console.error("Error fetching products:", error);
       }

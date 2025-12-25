@@ -194,9 +194,22 @@ router.get('/reviews/:productId', async (req, res) => {
 });
 
 router.post('/reviews', async (req, res) => {
-    const review = new Review(req.body);
     try {
+        const review = new Review(req.body);
         const newReview = await review.save();
+
+        // Find the product and update its rating
+        const product = await Product.findById(newReview.product);
+        if (product) {
+            const reviews = await Review.find({ product: product._id });
+            const numOfReviews = reviews.length;
+            const averageRating = reviews.reduce((acc, item) => item.rating + acc, 0) / numOfReviews;
+
+            product.numOfReviews = numOfReviews;
+            product.averageRating = averageRating;
+            await product.save();
+        }
+
         res.status(201).json(newReview);
     } catch (error) {
         res.status(400).json({ message: error.message });

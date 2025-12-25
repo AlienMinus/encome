@@ -1403,3 +1403,15 @@
         padding: 8px;
     }
 }
+
+/* ================= RATING ================= */
+.rating span {
+  color: #c2185b; /* Pink color for stars */
+}
+
+.rating-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  color: #ad1457;
+}

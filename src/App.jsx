@@ -15,6 +15,7 @@ import Contact from "./pages/Contact.jsx";
 import { useAuth } from "./context/AuthContext";
 import Profile from "./pages/Profile.jsx";
 
+
 import Registration from "./components/Registration.jsx";
 import Login from "./components/Login.jsx";
 import PasswordReset from "./components/PasswordReset.jsx";

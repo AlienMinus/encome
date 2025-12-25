@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import { FaTrash } from 'react-icons/fa'
+import Loading from '../../components/Loading';
 
 const AdminContacts = () => {
   const [contacts, setContacts] = useState([]);
@@ -18,6 +19,7 @@ const AdminContacts = () => {
         });
         setContacts(response.data);
       } catch (err) {
+        console.error(err);
         setError(err);
       } finally {
         setLoading(false);
@@ -43,7 +45,7 @@ const AdminContacts = () => {
   };
 
   if (loading) {
-    return <div className="container admin-contacts-container">Loading contacts...</div>;
+    return <Loading />;
   }
 
   if (error) {

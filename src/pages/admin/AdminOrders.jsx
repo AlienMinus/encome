@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import Loading from '../../components/Loading';
 
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -15,6 +16,7 @@ const AdminOrders = () => {
         });
         setOrders(response.data);
       } catch (err) {
+        console.error(err);
         setError(err);
       } finally {
         setLoading(false);
@@ -38,7 +40,7 @@ const AdminOrders = () => {
   };
 
   if (loading) {
-    return <div className="container admin-orders-container">Loading orders...</div>;
+    return <Loading />;
   }
 
   if (error) {
