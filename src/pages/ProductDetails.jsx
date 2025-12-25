@@ -12,7 +12,6 @@ const API_BASE_URL = "https://encome.onrender.com/api";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const { currentUserId } = useAuth();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -37,7 +36,8 @@ const ProductDetails = () => {
 
   const handleReviewSubmit = async (newReview) => {
     try {
-      await axios.post(`${API_BASE_URL}/reviews`, { ...newReview, product: id });
+      const { productId, ...reviewData } = newReview;
+      await axios.post(`${API_BASE_URL}/reviews`, { ...reviewData, product: id });
       // Refetch product and reviews to get updated rating
       fetchProductAndReviews();
     } catch (err) {
