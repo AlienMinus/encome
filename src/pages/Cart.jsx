@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { useCart } from '../context/CartContext';
 import CartItem from '../components/CartItem';
 import { useNavigate } from 'react-router-dom';
+import { FaHistory } from 'react-icons/fa';
 
 const Cart = () => {
   const { cartItems, getCartTotal } = useCart();
@@ -15,7 +16,12 @@ const Cart = () => {
 
   return (
     <div className="container">
-      <h1>Cart</h1>
+      <div className="d-flex justify-content-between align-items-center my-3">
+        <h1>Cart</h1>
+        <button className="btn btn-outline-secondary" onClick={() => navigate('/order-history')} title="Order History">
+          <FaHistory size={20} />
+        </button>
+      </div>
       {cartItems.length === 0 ? (
         <p>Your cart is empty</p>
       ) : (

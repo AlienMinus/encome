@@ -128,6 +128,14 @@ const Checkout = () => {
       const placedOrder = response.data;
       console.log("Order Placed Successfully:", placedOrder);
 
+      if (!user) {
+        const guestOrderIds = JSON.parse(localStorage.getItem("guestOrderIds") || "[]");
+        if (!guestOrderIds.includes(placedOrder.orderId)) {
+          guestOrderIds.push(placedOrder.orderId);
+          localStorage.setItem("guestOrderIds", JSON.stringify(guestOrderIds));
+        }
+      }
+
       clearCart();
       navigate(`/order-receipt/${placedOrder.orderId}`, { state: { orderDetails: placedOrder } });
     } catch (err) {

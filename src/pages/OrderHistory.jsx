@@ -12,20 +12,37 @@ const OrderHistory = () => {
         const fetchOrderHistory = async () => {
             const token = localStorage.getItem("authToken");
 
-            if (!token) {
-                return;
-            }
-
-            try {
-                const response = await axios.get('https://encome.onrender.com/api/orders/history', {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
+            if (user && token) {
+                try {
+                    const response = await axios.get('https://encome.onrender.com/api/orders/history', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    const sortedOrders = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    setOrders(sortedOrders);
+                } catch (error) {
+                    console.error('Error fetching order history:', error);
+                }
+            } else {
+                const guestOrderIds = JSON.parse(localStorage.getItem("guestOrderIds") || "[]");
+                if (guestOrderIds.length > 0) {
+                    try {
+                        const requests = guestOrderIds.map(id =>
+                            axios.get(`https://encome.onrender.com/api/orders/${id}`)
+                                .then(res => res.data)
+                                .catch(err => null)
+                        );
+                        const results = await Promise.all(requests);
+                        const validOrders = results.filter(order => order !== null);
+                        const sortedOrders = validOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        setOrders(sortedOrders);
+                    } catch (error) {
+                        console.error('Error fetching guest order history:', error);
                     }
-                });
-                const sortedOrders = response.data.sort((a, b) => new Date(b.date) - new Date(a.date));
-                setOrders(sortedOrders);
-            } catch (error) {
-                console.error('Error fetching order history:', error);
+                } else {
+                    setOrders([]);
+                }
             }
         };
 
