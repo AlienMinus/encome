@@ -9,6 +9,7 @@ const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const UPI_ID = "your_upi_id@upi";
 
   const [shippingInfo, setShippingInfo] = useState({
     name: "",
@@ -312,7 +313,7 @@ const Checkout = () => {
                 {!isPaymentConfirmed ? (
                   <>
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=your-upi-id@upi&pn=Encome&am=${getCartTotal().toFixed(2)}&cu=INR`)}`}
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=${UPI_ID}&pn=Encome&am=${getCartTotal().toFixed(2)}&cu=INR`)}`}
                       alt="UPI QR Code"
                       className="img-fluid"
                     />

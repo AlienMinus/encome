@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Recommended from '../components/Recommended';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from "../context/CartContext";
@@ -12,6 +12,7 @@ const API_BASE_URL = "https://encome.onrender.com/api";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -43,6 +44,11 @@ const ProductDetails = () => {
     } catch (err) {
       console.error("Error submitting review:", err);
     }
+  };
+
+  const handleOrderNow = () => {
+    addToCart(product);
+    navigate('/checkout');
   };
 
   if (!product) {
@@ -146,12 +152,20 @@ const ProductDetails = () => {
               ({discountPercentage}% off)
             </small>
           </p>
-          <button
-            className="btn btn-add-to-cart"
-            onClick={() => addToCart(product)}
-          >
-            Add to Cart
-          </button>
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-add-to-cart"
+              onClick={() => addToCart(product)}
+            >
+              Add to Cart
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={handleOrderNow}
+            >
+              Order Now
+            </button>
+          </div>
         </div>
       </div>
       <div className="row">
