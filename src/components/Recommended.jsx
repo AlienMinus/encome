@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import ProductCard from "./ProductCard";
 
 const Recommended = ({ currentProductId, currentProductCategory }) => {
   const [allProducts, setAllProducts] = useState([]);
@@ -10,7 +9,7 @@ const Recommended = ({ currentProductId, currentProductCategory }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch('/api/products');
+        const response = await fetch('https://encome.onrender.com/api/products');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
