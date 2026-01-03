@@ -23,6 +23,8 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
   const [showUPIModal, setShowUPIModal] = useState(false);
   const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
+  const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
+  const [placedOrderDetails, setPlacedOrderDetails] = useState(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -135,6 +137,7 @@ const Checkout = () => {
 
       const placedOrder = response.data;
       console.log("Order Placed Successfully:", placedOrder);
+      setPlacedOrderDetails(placedOrder);
 
       if (!user) {
         const guestOrderIds = JSON.parse(localStorage.getItem("guestOrderIds") || "[]");
@@ -145,9 +148,16 @@ const Checkout = () => {
       }
 
       clearCart();
-      navigate(`/order-receipt/${placedOrder.orderId}`, { state: { orderDetails: placedOrder } });
+      setShowOrderSuccessModal(true);
     } catch (err) {
       console.error("Error placing order:", err);
+    }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowOrderSuccessModal(false);
+    if (placedOrderDetails) {
+      navigate(`/order-receipt/${placedOrderDetails.orderId}`, { state: { orderDetails: placedOrderDetails } });
     }
   };
 
@@ -325,7 +335,7 @@ const Checkout = () => {
                 ) : (
                   <div className="text-success py-3">
                     <FaCheckCircle size={60} className="mb-3" />
-                    <h4>Order Placed Successfully!</h4>
+                    <h4>Proceeded Successfully!</h4>
                     <p>Your payment is being verified.</p>
                   </div>
                 )}
@@ -333,6 +343,31 @@ const Checkout = () => {
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={() => setShowUPIModal(false)}>
                   Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showOrderSuccessModal && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Order Status</h5>
+                <button type="button" className="btn-close" onClick={handleCloseSuccessModal} aria-label="Close"></button>
+              </div>
+              <div className="modal-body text-center">
+                <div className="text-success py-3">
+                    <FaCheckCircle size={60} className="mb-3" />
+                    <h4>Order Placed Successfully!</h4>
+                    <p>A confirmation email will be sent shortly.</p>
+                  </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-primary-custom" onClick={handleCloseSuccessModal}>
+                  View Receipt
                 </button>
               </div>
             </div>

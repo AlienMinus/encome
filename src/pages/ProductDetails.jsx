@@ -7,6 +7,7 @@ import ProductReview from '../components/ProductReview';
 import ReviewList from '../components/ReviewList';
 import Rating from '../components/Rating';
 import axios from "axios";
+import {FaShoppingCart} from 'react-icons/fa'
 
 const API_BASE_URL = "https://encome.onrender.com/api";
 
@@ -160,10 +161,10 @@ const ProductDetails = () => {
               Add to Cart
             </button>
             <button
-              className="btn btn-primary"
+              className="btn btn-success"
               onClick={handleOrderNow}
             >
-              Order Now
+              Order Now <FaShoppingCart size={20} />
             </button>
           </div>
         </div>
