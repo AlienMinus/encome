@@ -68,7 +68,7 @@ const OrderHistory = () => {
                                     {order.items.map((item, index) => (
                                         <li key={item._id || index}>
                                             <span>{item.name} (x{item.quantity})</span>
-                                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                                            <span>₹{(item.quantity * item.price).toFixed(2)}</span>
                                         </li>
                                     ))}
                                 </ul>
@@ -82,7 +82,11 @@ const OrderHistory = () => {
                                     <p>
                                         <strong>Total:</strong> ${order.total.toFixed(2)}
                                     </p>
-                                    <Link to={`/order-receipt/${order.orderId}`} className="btn btn-primary-custom">
+                                    <Link 
+                                        to={`/order-receipt/${order.orderId}`} 
+                                        state={{ orderDetails: order }}
+                                        className="btn btn-primary-custom"
+                                    >
                                         View Receipt
                                     </Link>
                                 </div>

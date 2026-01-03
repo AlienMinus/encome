@@ -140,8 +140,8 @@ const ProductDetails = () => {
           </p>
           <p className="price-section">
             <span className="sale-badge">SALE</span>
-            <small className="tag-price">${originalPrice}</small>
-            <small className="text-muted current-price">${product.price}</small>
+            <small className="tag-price">₹{originalPrice}</small>
+            <small className="text-muted current-price">₹{product.price}</small>
             <small className="discount-percentage">
               ({discountPercentage}% off)
             </small>
@@ -155,7 +155,7 @@ const ProductDetails = () => {
         </div>
       </div>
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-12">
           <ProductReview
             productId={product._id}
             onReviewSubmit={handleReviewSubmit}
@@ -163,7 +163,7 @@ const ProductDetails = () => {
         </div>
       </div>
       <div className="row">
-        <div className="col-md-12">
+        <div className="col-12">
           <ReviewList productId={product._id} reviews={reviews} />
 
           <Recommended

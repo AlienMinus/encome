@@ -21,8 +21,8 @@ const ProductCard = ({ product }) => {
         />
         <p className="card-text price-section">
           <span className="sale-badge">SALE</span>
-          <small className="tag-price">${originalPrice}</small>
-          <small className="text-muted current-price">${product.price}</small>
+          <small className="tag-price">₹{originalPrice}</small>
+          <small className="text-muted current-price">₹{product.price}</small>
           <small className=" discount-percentage">({discountPercentage}% off)</small>
         </p>
         <div className="d-flex justify-content-between">

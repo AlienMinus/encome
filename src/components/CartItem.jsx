@@ -29,7 +29,7 @@ const CartItem = ({ item }) => {
           <div className="card-body d-flex flex-column">
             <div className="d-flex justify-content-between">
               <h5 className="card-title">{item.name}</h5>
-              <p className="card-text fw-bold">${item.price}</p>
+              <p className="card-text fw-bold">₹{item.price}</p>
             </div>
             <p className="card-text flex-grow-1">{item.description.slice(0, 35) + "..."}</p>
             <div className="cart-item-controls mt-auto">

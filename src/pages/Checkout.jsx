@@ -3,6 +3,7 @@ import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { FaCheckCircle } from "react-icons/fa";
 
 const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -18,7 +19,9 @@ const Checkout = () => {
     zip: "",
     country: "",
   });
-  const [paymentMethod, setPaymentMethod] = useState("Credit Card");
+  const [paymentMethod, setPaymentMethod] = useState("Cash on Delivery");
+  const [showUPIModal, setShowUPIModal] = useState(false);
+  const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -63,6 +66,10 @@ const Checkout = () => {
 
   const handlePaymentChange = (e) => {
     setPaymentMethod(e.target.value);
+    if (e.target.value === "UPI") {
+      setIsPaymentConfirmed(false);
+      setShowUPIModal(true);
+    }
   };
 
   const handlePlaceOrder = async (e) => {
@@ -159,12 +166,12 @@ const Checkout = () => {
                   <span>
                     {item.name} (x{item.quantity})
                   </span>
-                  <span>${(item.quantity * item.price).toFixed(2)}</span>
+                  <span>₹{(item.quantity * item.price).toFixed(2)}</span>
                 </li>
               ))}
             </ul>
             <div className="total-checkout">
-              <strong>Total:</strong> ${getCartTotal().toFixed(2)}
+              <strong>Total:</strong> ₹{getCartTotal().toFixed(2)}
             </div>
           </>
         )}
@@ -259,21 +266,11 @@ const Checkout = () => {
               <input
                 type="radio"
                 name="paymentMethod"
-                value="Credit Card"
-                checked={paymentMethod === "Credit Card"}
+                value="UPI"
+                checked={paymentMethod === "UPI"}
                 onChange={handlePaymentChange}
               />
-              Credit Card
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="PayPal"
-                checked={paymentMethod === "PayPal"}
-                onChange={handlePaymentChange}
-              />
-              PayPal
+              UPI
             </label>
             <label>
               <input
@@ -286,6 +283,14 @@ const Checkout = () => {
               Cash on Delivery
             </label>
           </div>
+          {paymentMethod === "UPI" && (
+            <button type="button" className="btn btn-sm btn-outline-primary mt-2" onClick={() => {
+              setIsPaymentConfirmed(false);
+              setShowUPIModal(true);
+            }}>
+              Show QR Code
+            </button>
+          )}
         </div>
         <button
           type="submit"
@@ -294,6 +299,45 @@ const Checkout = () => {
           Place Order
         </button>
       </form>
+
+      {showUPIModal && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Scan UPI QR Code</h5>
+                <button type="button" className="btn-close" onClick={() => setShowUPIModal(false)} aria-label="Close"></button>
+              </div>
+              <div className="modal-body text-center">
+                {!isPaymentConfirmed ? (
+                  <>
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=your-upi-id@upi&pn=Encome&am=${getCartTotal().toFixed(2)}&cu=INR`)}`}
+                      alt="UPI QR Code"
+                      className="img-fluid"
+                    />
+                    <p className="mt-2">Scan this QR code to pay via UPI</p>
+                    <button type="button" className="btn btn-success mt-2" onClick={() => setIsPaymentConfirmed(true)}>
+                      I have made the payment
+                    </button>
+                  </>
+                ) : (
+                  <div className="text-success py-3">
+                    <FaCheckCircle size={60} className="mb-3" />
+                    <h4>Order Placed Successfully!</h4>
+                    <p>Your payment is being verified.</p>
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowUPIModal(false)}>
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

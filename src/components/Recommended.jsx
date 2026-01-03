@@ -41,15 +41,15 @@ const Recommended = ({ currentProductId, currentProductCategory }) => {
           const discountPercentage = Math.round(((originalPrice - product.price) / originalPrice) * 100);
 
           return (
-            <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product._id}>
+            <div className="col-lg-3 col-md-4 col-sm-6 col-12 mb-4" key={product._id}>
               <div className="card h-100 product-card">
                 <img src={product.images[0]} className="card-img-top" alt={product.name} />
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title text-hover-effect">{product.name}</h5>
                   <p className="card-text price-section">
                     <span className="sale-badge">SALE</span>
-                    <small className="tag-price">${originalPrice}</small>
-                    <small className="text-muted current-price">${product.price}</small>
+                    <small className="tag-price">₹{originalPrice}</small>
+                    <small className="text-muted current-price">₹{product.price}</small>
                     <small className=" discount-percentage">({discountPercentage}% off)</small>
                   </p>
                   <div className="d-flex justify-content-between mt-auto">

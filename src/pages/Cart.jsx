@@ -35,7 +35,7 @@ const Cart = () => {
               <button className="btn btn-checkout" onClick={handleCheckout}>Checkout</button>
             </div>
             <div className="text-sm-end">
-              <h4>Total: ${totalPrice.toFixed(2)}</h4>
+              <h4>Total: ₹{totalPrice.toFixed(2)}</h4>
             </div>
           </div>
         </div>

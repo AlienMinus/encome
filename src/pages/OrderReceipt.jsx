@@ -19,7 +19,10 @@ const OrderReceipt = () => {
                 setLoading(true);
                 setError(null);
                 try {
-                    const response = await axios.get(`https://encome.onrender.com/api/orders/${orderId}`);
+                    const token = localStorage.getItem("authToken");
+                    const response = await axios.get(`https://encome.onrender.com/api/orders/${orderId}`, {
+                        headers: token ? { Authorization: `Bearer ${token}` } : {}
+                    });
                     setOrderDetails(response.data);
                 } catch (err) {
                     console.error('Failed to fetch order details.', err);
@@ -133,13 +136,13 @@ const OrderReceipt = () => {
                 <ul className="item-list">
                     {orderDetails.items.map(item => (
                         <li key={item._id} className="item-detail">
-                            <span>{item.name} (x${item.quantity})</span>
-                            <span>${(item.quantity * item.price).toFixed(2)}</span>
+                            <span>{item.name} (x{item.quantity})</span>
+                            <span>₹{(item.quantity * item.price).toFixed(2)}</span>
                         </li>
                     ))}
                 </ul>
                 <div className="total-amount">
-                    <strong>Total:</strong> <span>${orderDetails.total.toFixed(2)}</span>
+                    <strong>Total:</strong> <span>₹{orderDetails.total.toFixed(2)}</span>
                 </div>
             </div>
 
@@ -153,10 +156,10 @@ const OrderReceipt = () => {
 
             <div className="payment-info">
                 <h2>Payment Method</h2>
-                <p>${orderDetails.paymentMethod}</p>
+                <p>{orderDetails.paymentMethod}</p>
             </div>
 
-            <p className="order-footer">A confirmation email has been sent to your registered email address.</p>
+            <p className="order-footer">A confirmation email will be sent to your registered email address shortly.</p>
 
             <button onClick={handleDownloadReceipt} className="btn btn-primary-custom mt-4">
                 Download Receipt
