@@ -26,13 +26,13 @@ const AdminOrders = () => {
     fetchOrders();
   }, []);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await axios.put(`https://encome.onrender.com/api/orders/${orderId}/status`, 
+      const response = await axios.put(`https://encome.onrender.com/api/orders/${id}/status`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` } }
       );
-      setOrders(orders.map(order => order.orderId === orderId ? response.data : order));
+      setOrders(orders.map(order => order._id === id ? response.data : order));
     } catch (err) {
       console.error("Failed to update order status:", err);
       // Optionally show an error message to the user
@@ -75,7 +75,7 @@ const AdminOrders = () => {
                   <select 
                     className="form-select" 
                     value={order.status} 
-                    onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
+                    onChange={(e) => handleStatusChange(order._id, e.target.value)}
                   >
                     <option value="Pending">Pending</option>
                     <option value="Processing">Processing</option>
@@ -86,7 +86,11 @@ const AdminOrders = () => {
                   </select>
                 </td>
                 <td>
-                  <Link to={`/order-receipt/${order.orderId}`} className="btn btn-primary-custom btn-sm">
+                  <Link 
+                    to={`/order-receipt/${order.orderId}`} 
+                    state={{ orderDetails: order }}
+                    className="btn btn-primary-custom btn-sm"
+                  >
                     View Receipt
                   </Link>
                 </td>

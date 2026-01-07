@@ -9,7 +9,7 @@ const Checkout = () => {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const UPI_ID = "your_upi_id@upi";
+  const UPI_ID = "dasmanasranjan2005@okaxis";
 
   const [shippingInfo, setShippingInfo] = useState({
     name: "",
