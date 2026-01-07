@@ -159,7 +159,7 @@ const OrderReceipt = () => {
                 <p>{orderDetails.paymentMethod}</p>
             </div>
 
-            <p className="order-footer">Remember to Return.</p>
+            <p className="order-footer">Remember to Revisit.</p>
 
             <button onClick={handleDownloadReceipt} className="btn btn-primary-custom mt-4">
                 Download Receipt
