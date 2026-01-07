@@ -46,7 +46,7 @@ const styles = {
   },
   homeButton: {
     padding: '12px 24px',
-    backgroundColor: '#007bff',
+    backgroundColor: '#ff0077ff',
     color: '#ffffff',
     textDecoration: 'none',
     borderRadius: '5px',
