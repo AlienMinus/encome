@@ -51,12 +51,12 @@ const DashboardStats = () => {
       <div className="col-md-3 col-sm-6 mb-3">
         <div className="card text-white bg-success h-100 dashboard-stat-card">
           <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="position-relative">
               <div>
                 <h6 className="card-title mb-0">Total Revenue</h6>
                 <h3 className="mt-2 mb-0">₹{stats.revenue.toFixed(2)}</h3>
               </div>
-              <FaMoneyBillWave size={40} className="opacity-50" />
+              <FaMoneyBillWave size={40} className="opacity-50 position-absolute top-50 end-0 translate-middle-y" />
             </div>
           </div>
         </div>
@@ -64,12 +64,12 @@ const DashboardStats = () => {
       <div className="col-md-3 col-sm-6 mb-3">
         <div className="card text-white bg-primary h-100 dashboard-stat-card">
           <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="position-relative">
               <div>
                 <h6 className="card-title mb-0">Total Orders</h6>
                 <h3 className="mt-2 mb-0">{stats.orders}</h3>
               </div>
-              <FaShoppingCart size={40} className="opacity-50" />
+              <FaShoppingCart size={40} className="opacity-50 position-absolute top-50 end-0 translate-middle-y" />
             </div>
           </div>
         </div>
@@ -77,12 +77,12 @@ const DashboardStats = () => {
       <div className="col-md-3 col-sm-6 mb-3">
         <div className="card text-white bg-warning h-100 dashboard-stat-card">
           <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="position-relative">
               <div>
                 <h6 className="card-title mb-0">Total Products</h6>
                 <h3 className="mt-2 mb-0">{stats.products}</h3>
               </div>
-              <FaBox size={40} className="opacity-50" />
+              <FaBox size={40} className="opacity-50 position-absolute top-50 end-0 translate-middle-y" />
             </div>
           </div>
         </div>
@@ -90,12 +90,12 @@ const DashboardStats = () => {
       <div className="col-md-3 col-sm-6 mb-3">
         <div className="card text-white bg-info h-100 dashboard-stat-card">
           <div className="card-body">
-            <div className="d-flex justify-content-between align-items-center">
+            <div className="position-relative">
               <div>
                 <h6 className="card-title mb-0">Messages</h6>
                 <h3 className="mt-2 mb-0">{stats.contacts}</h3>
               </div>
-              <FaEnvelope size={40} className="opacity-50" />
+              <FaEnvelope size={40} className="opacity-50 position-absolute top-50 end-0 translate-middle-y" />
             </div>
           </div>
         </div>
