@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import DashboardStats from '../../components/admin/DashboardStats';
+import Charts from '../../components/admin/Charts';
 
 const AdminDashboard = () => {
   const { logout } = useAuth();
@@ -18,6 +20,8 @@ const AdminDashboard = () => {
         <button onClick={handleLogout} className="logout-button">Logout</button>
       </div>
       <p>Welcome to the Admin Dashboard!</p>
+      <DashboardStats />
+      <Charts />
       <div className="row justify-content-center d-flex align-items-stretch">
         <div className="col-md-6 mb-4">
           <div className="card admin-card">
