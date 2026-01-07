@@ -80,7 +80,7 @@ const OrderHistory = () => {
                                         <strong>Status:</strong> {order.status}
                                     </p>
                                     <p>
-                                        <strong>Total:</strong> ${order.total.toFixed(2)}
+                                        <strong>Total:</strong> ₹{order.total.toFixed(2)}
                                     </p>
                                     <Link 
                                         to={`/order-receipt/${order.orderId}`} 
