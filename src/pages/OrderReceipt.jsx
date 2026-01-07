@@ -122,7 +122,7 @@ const OrderReceipt = () => {
     }
 
     return (
-        <div className="order-receipt-container">
+        <div className="order-receipt-container" style={{marginTop: "5rem"}}>
             <img src={favicon} alt="Company Logo" className="receipt-logo" />
             <h1>Order Confirmation</h1>
             <p className="order-success-message">Thank you for your purchase!</p>
