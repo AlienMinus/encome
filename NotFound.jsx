@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 
 const NotFound = () => {
   return (
@@ -11,6 +12,7 @@ const NotFound = () => {
       </p>
       <Link to="/" style={styles.homeButton}>
         Back to Home
+        <FaHome style={{ marginLeft: '5px' }} />
       </Link>
     </div>
   );
@@ -30,7 +32,7 @@ const styles = {
   errorCode: {
     fontSize: '6rem',
     fontWeight: 'bold',
-    color: '#dc3545', // Red color for error
+    color: '#c2185b', // Red color for error
     margin: '0',
   },
   message: {
@@ -46,7 +48,7 @@ const styles = {
   },
   homeButton: {
     padding: '12px 24px',
-    backgroundColor: '#ff0077ff',
+    backgroundColor: '#c2185b',
     color: '#ffffff',
     textDecoration: 'none',
     borderRadius: '5px',
