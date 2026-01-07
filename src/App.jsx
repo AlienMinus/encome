@@ -14,6 +14,7 @@ import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
 import { useAuth } from "./context/AuthContext";
 import Profile from "./pages/Profile.jsx";
+import NotFound from "../NotFound.jsx";
 
 
 import Registration from "./components/Registration.jsx";
@@ -62,6 +63,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/order-history" element={<OrderHistory />} />
+        <Route path="*" element={<NotFound />} />
 
         {/* Admin Routes */}
         <Route
