@@ -57,33 +57,26 @@ const AdminContacts = () => {
       <div className="d-flex justify-content-between align-items-center">
         <h1>Contact Messages</h1>
       </div>
-      <div className="table-responsive">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Message</th>
-              <th>Date</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contacts.map((contact) => (
-              <tr key={contact._id}>
-                <td>{contact.name}</td>
-                <td>{contact.email}</td>
-                <td>{contact.message}</td>
-                <td>{new Date(contact.createdAt).toLocaleDateString()}</td>
-                <td>
+      <div className="row mt-3">
+        {contacts.map((contact) => (
+          <div key={contact._id} className="col-md-6 col-lg-4 mb-4">
+            <div className="card h-100 shadow-sm">
+              <div className="card-body d-flex flex-column">
+                <div className="d-flex justify-content-between align-items-start mb-2">
+                  <h5 className="card-title mb-0">{contact.name}</h5>
+                  <small className="text-muted">{new Date(contact.createdAt).toLocaleDateString()}</small>
+                </div>
+                <h6 className="card-subtitle mb-3 text-muted">{contact.email}</h6>
+                <p className="card-text flex-grow-1">{contact.message}</p>
+                <div className="text-end">
                   <button onClick={() => handleDelete(contact._id)} className="btn btn-danger btn-sm">
                     <FaTrash />
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
